@@ -34,3 +34,8 @@ This project is an end-to-end web application developed using Flask, HTML, and C
 ## Contributing
 Feel free to fork the repository, make changes, and submit a pull request. Your contributions are welcome!
 
+## Images
+![image](https://github.com/user-attachments/assets/cd9b5867-9f49-4f25-8af6-a4db75d071ca)
+![image](https://github.com/user-attachments/assets/d0993619-589f-446b-87cc-8f2e1ca77240)
+![image](https://github.com/user-attachments/assets/adcda401-8845-4905-954a-514fd20f991c)
+
