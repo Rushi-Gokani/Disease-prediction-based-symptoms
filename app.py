@@ -533,232 +533,237 @@ def check_disease():
     if request.method == 'GET':
         return render_template('checkdisease.html', list2=alphabaticsymptomslist)
     elif request.method == 'POST':
-
+            print("DEBUG: Received POST request to /checkdisease")
             psymptoms = request.form.getlist("symptoms[]")
+            print(f"DEBUG: Selected symptoms: {psymptoms}")
 
-            # Create a dictionary to hold symptoms
-            symptoms = {}
-            for s in symptomslist:
-                symptoms[s] = 0
-            
-            # Set symptoms to 1 where user has selected
-            for s in psymptoms:
-                symptoms[s] = 1
-            
-            # Put all data in a test dataset
-            df_test = pd.DataFrame(columns=list(symptoms.keys()))
-            df_test.loc[0] = np.array(list(symptoms.values()))
-            
-            # Load pre-trained model
-            clf = load("./saved_model/random_forest.joblib")
-            result = clf.predict(df_test)
-            
-            # Get the predicted disease
-            predicted_disease = result[0]
-            
-            disease_details = {
-    'Fungal Infection': {
-        'description': 'Fungal infections are caused by various types of fungi and can affect different parts of the body, such as the skin, nails, or internal organs. Symptoms vary depending on the type and location of the infection but may include itching, redness, swelling, and discomfort.',
-        'treatment': 'Treatment for fungal infections depends on the type and severity of the infection. It may include antifungal medications, topical creams, and lifestyle changes to prevent recurrence.'
-    },
-    'Allergy': {
-        'description': 'Allergies occur when the immune system overreacts to a harmless substance, such as pollen, pet dander, or certain foods. Symptoms range from mild to severe and can include sneezing, itching, rash, swelling, and difficulty breathing.',
-        'treatment': 'Allergy treatment aims to reduce symptoms and prevent allergic reactions. This may include allergen avoidance, medications such as antihistamines or corticosteroids, and allergy shots (immunotherapy) for long-term management.'
-    },
-    'GERD': {
-        'description': 'GERD is a chronic condition where stomach acid flows back into the esophagus, causing irritation and inflammation. Common symptoms include heartburn, regurgitation, chest pain, and difficulty swallowing.',
-        'treatment': 'Treatment for GERD involves lifestyle changes, medications to reduce stomach acid production or strengthen the lower esophageal sphincter, and in severe cases, surgery.'
-    },
-    'Chronic Cholestasis': {
-        'description': 'Chronic cholestasis is a condition characterized by impaired bile flow from the liver, leading to the accumulation of bile acids in the liver and bloodstream. Symptoms may include jaundice, itching, fatigue, and pale stools.',
-        'treatment': 'Treatment for chronic cholestasis focuses on managing symptoms and addressing underlying causes. This may include medications to improve bile flow, dietary changes, and in severe cases, liver transplantation.'
-    },
-    'Drug Reaction': {
-        'description': 'Drug reactions can occur when the body reacts adversely to a medication. Symptoms vary widely and can range from mild rashes to severe allergic reactions, depending on the individual and the drug involved.',
-        'treatment': 'Treatment for drug reactions depends on the type and severity of symptoms. It may include discontinuing the offending medication, supportive care, and in severe cases, emergency medical treatment.'
-    },
-    'Peptic Ulcer Disease': {
-        'description': 'Peptic ulcer disease involves the formation of open sores in the lining of the stomach, small intestine, or esophagus. Common symptoms include abdominal pain, bloating, nausea, vomiting, and heartburn.',
-        'treatment': 'Treatment for peptic ulcer disease aims to reduce symptoms, promote healing of ulcers, and prevent complications. This may include medications to reduce stomach acid production, antibiotics to eradicate H. pylori bacteria, and lifestyle changes.'
-    },
-    'AIDS': {
-        'description': 'AIDS is a condition caused by the human immunodeficiency virus (HIV), which weakens the immune system, making individuals more susceptible to infections and certain cancers. Symptoms include recurrent infections, weight loss, fatigue, and swollen lymph nodes.',
-        'treatment': 'Treatment for AIDS involves antiretroviral therapy (ART) to suppress HIV replication, strengthen the immune system, and prevent disease progression. It also includes medications to treat and prevent opportunistic infections and supportive care.'
-    },
-    'Diabetes': {
-        'description': 'Diabetes is a chronic condition characterized by high blood sugar levels, either due to inadequate insulin production or the body\'s inability to use insulin effectively. Symptoms include increased thirst, frequent urination, fatigue, and blurred vision.',
-        'treatment': 'Treatment for diabetes involves blood sugar monitoring, lifestyle changes (such as diet and exercise), medications (including insulin and oral medications), and regular medical check-ups to prevent complications.'
-    },
-    'Gastroenteritis': {
-        'description': 'Gastroenteritis, often referred to as the stomach flu, is inflammation of the stomach and intestines, typically caused by viral or bacterial infections. Symptoms include diarrhea, vomiting, abdominal cramps, and fever.',
-        'treatment': 'Treatment for gastroenteritis focuses on preventing dehydration, managing symptoms, and addressing underlying causes. This may include fluid and electrolyte replacement, dietary adjustments, and in some cases, medications to relieve symptoms.'
-    },
-    'Bronchial Asthma': {
-        'description': 'Asthma is a chronic respiratory condition characterized by inflammation and narrowing of the airways, leading to recurrent episodes of wheezing, coughing, chest tightness, and shortness of breath.',
-        'treatment': 'Treatment for asthma involves long-term management to control symptoms and prevent asthma attacks. This may include medications (such as bronchodilators and corticosteroids), avoidance of triggers, and lifestyle modifications.'
-    },
-    'Hypertension': {
-        'description': 'Hypertension, or high blood pressure, is a common condition in which the force of blood against the artery walls is consistently too high. Often called the "silent killer," hypertension typically has no symptoms but can lead to serious health complications such as heart disease, stroke, and kidney damage if left untreated.',
-        'treatment': 'Treatment for hypertension involves lifestyle changes (such as diet, exercise, and stress management) and medications to lower blood pressure and reduce the risk of complications.'
-    },
-    'Migraine': {
-        'description': 'Migraine is a neurological disorder characterized by recurrent, intense headaches often accompanied by nausea, vomiting, and sensitivity to light and sound. Migraine attacks can last for hours to days and significantly impact daily life.',
-        'treatment': 'Treatment for migraines aims to prevent attacks and relieve symptoms when they occur. This may include medications to prevent migraines (prophylactic medications), acute treatments for migraine attacks, and lifestyle changes.'
-    },
-    'Cervical Spondylosis': {
-        'description': 'Cervical spondylosis is a degenerative condition affecting the cervical spine (neck) caused by age-related changes in the discs and joints. Symptoms may include neck pain, stiffness, headaches, and numbness or weakness in the arms or hands.',
-        'treatment': 'Treatment for cervical spondylosis focuses on managing symptoms and preventing complications. This may include medications for pain and inflammation, physical therapy, neck exercises, and in severe cases, surgery.'
-    },
-    'Paralysis': {
-        'description': 'Paralysis resulting from a brain hemorrhage occurs when bleeding in the brain damages brain tissue, leading to loss of function in certain parts of the body. The severity and location of the hemorrhage determine the extent of paralysis, which can range from mild weakness to complete loss of movement.',
-        'treatment': 'Treatment for paralysis due to brain hemorrhage depends on the extent of damage and the location of the hemorrhage. It may include medications to reduce swelling and prevent further bleeding, rehabilitation therapy to regain function, and supportive care.'
-    },
-    'Jaundice': {
-        'description': 'Jaundice is a condition characterized by yellowing of the skin and eyes due to high levels of bilirubin in the blood. It can occur as a result of various underlying conditions, such as liver disease, hemolytic anemia, or bile duct obstruction.',
-        'treatment': 'Treatment for jaundice depends on the underlying cause. It may include medications to treat liver disease or infections, procedures to remove obstructions in the bile ducts, and supportive care to manage symptoms.'
-    },
-    'Malaria': {
-        'description': 'Malaria is a mosquito-borne infectious disease caused by Plasmodium parasites. Symptoms typically include fever, chills, sweats, headache, muscle aches, and fatigue. Without prompt treatment, malaria can be life-threatening.',
-        'treatment': 'Treatment for malaria involves antimalarial medications to kill the parasites in the bloodstream. The choice of medication depends on the type of malaria parasite and its resistance to drugs.'
-    },
-    'Chickenpox': {
-        'description': 'Chickenpox is a highly contagious viral infection caused by the varicella-zoster virus. It is characterized by an itchy rash of fluid-filled blisters that eventually crust over. Other symptoms may include fever, headache, and fatigue.',
-        'treatment': 'Treatment for chickenpox aims to relieve symptoms and prevent complications. This may include over-the-counter medications for fever and itching, antiviral medications for severe cases, and measures to prevent scratching and secondary infections.'
-    },
-    'Dengue': {
-        'description': 'Dengue fever is a mosquito-borne viral infection common in tropical and subtropical regions. Symptoms include high fever, severe headache, pain behind the eyes, joint and muscle pain, rash, and mild bleeding.',
-        'treatment': 'Treatment for dengue fever focuses on relieving symptoms and preventing complications. This may include rest, hydration, pain relievers (but not aspirin), and medical monitoring for signs of severe dengue.'
-    },
-    'Typhoid': {
-        'description': 'Typhoid fever is a bacterial infection caused by Salmonella typhi. Symptoms include sustained high fever, weakness, stomach pain, headache, and loss of appetite. In severe cases, complications such as intestinal perforation can occur.',
-        'treatment': 'Treatment for typhoid fever involves antibiotics to kill the Salmonella bacteria. In addition to medications, supportive care such as fluids and electrolyte replacement may be necessary.'
-    },
-    'Hepatitis A': {
-        'description': 'Hepatitis A is a viral liver infection spread through contaminated food or water. Symptoms include fever, fatigue, nausea, jaundice, and loss of appetite. Most cases resolve without treatment.',
-        'treatment': 'Treatment for hepatitis A focuses on relieving symptoms and preventing complications. This may include rest, hydration, and supportive care. In some cases, hospitalization may be necessary.'
-    },
-    'Hepatitis B': {
-        'description': 'Hepatitis B is a liver infection caused by the hepatitis B virus, transmitted through contact with infected blood or bodily fluids. Symptoms include fatigue, abdominal pain, and jaundice. Chronic infection can lead to severe liver damage and cancer.',
-        'treatment': 'Treatment for hepatitis B aims to manage symptoms, prevent complications, and reduce the risk of transmission. This may include antiviral medications, regular monitoring, and vaccination for close contacts.'
-    },
-    'Hepatitis C': {
-        'description': 'Hepatitis C is a liver infection transmitted through contact with infected blood. Often asymptomatic, it can lead to severe liver damage, including cirrhosis and cancer. Treatment with antiviral medications is available.',
-        'treatment': 'Treatment for hepatitis C involves antiviral medications to suppress the virus and prevent liver damage. The choice of medication and duration of treatment depend on factors such as the genotype of the virus and the extent of liver damage.'
-    },
-    'Hepatitis D': {
-        'description': 'Hepatitis D occurs only in individuals already infected with hepatitis B. Symptoms are similar to hepatitis B but can be more severe. Prevention through hepatitis B vaccination is crucial.',
-        'treatment': 'Treatment for hepatitis D focuses on managing symptoms and preventing complications. This may include antiviral medications for hepatitis B and supportive care to relieve symptoms.'
-    },
-    'Hepatitis E': {
-        'description': 'Hepatitis E is a liver infection spread through contaminated water or food. Symptoms are similar to hepatitis A and usually resolve without treatment. Pregnant women and those with liver disease are at higher risk of complications.',
-        'treatment': 'Treatment for hepatitis E is usually supportive, focusing on relieving symptoms and preventing dehydration. In severe cases, hospitalization and supportive care may be necessary.'
-    },
-    'Alcoholic hepatitis': {
-        'description': 'Liver inflammation caused by excessive alcohol consumption. Symptoms include jaundice, abdominal pain, nausea, and fever. Severe cases can lead to liver failure.',
-        'treatment': 'Treatment for alcoholic hepatitis involves abstinence from alcohol, supportive care to manage symptoms, and interventions to prevent further liver damage. In severe cases, hospitalization and medical interventions may be necessary.'
-    },
-    'Tuberculosis': {
-        'description': 'Infectious disease caused by the bacteria Mycobacterium tuberculosis. Symptoms include persistent cough, fever, weight loss, and night sweats. It primarily affects the lungs but can also involve other parts of the body.',
-        'treatment': 'Treatment for tuberculosis involves a combination of antibiotics taken for several months. It is essential to complete the full course of treatment to prevent the development of drug-resistant strains.'
-    },
-    'Common Cold': {
-        'description': 'Viral infection of the upper respiratory tract, causing symptoms like runny nose, sore throat, cough, and congestion. Usually resolves within a week with rest and home remedies.',
-        'treatment': 'Treatment for the common cold focuses on relieving symptoms and supporting the body\'s immune response. This may include rest, hydration, over-the-counter medications for symptom relief, and avoiding close contact with others to prevent transmission.'
-    },
-    'Pneumonia': {
-        'description': 'Inflammation of the lungs typically caused by bacterial, viral, or fungal infections. Symptoms include fever, chills, cough, chest pain, and difficulty breathing. Treatment involves antibiotics or antiviral medications.',
-        'treatment': 'Treatment for pneumonia depends on the underlying cause and severity of symptoms. It may include antibiotics for bacterial pneumonia, antiviral medications for viral pneumonia, supportive care to relieve symptoms, and hospitalization for severe cases.'
-    },
-    'Dimorphic hemmorhoids(piles)': {
-        'description': 'Swollen veins in the rectum or anus causing discomfort, itching, and bleeding. Can be internal or external and may require lifestyle changes, medication, or surgery for severe cases.',
-        'treatment': 'Treatment for hemorrhoids depends on the severity of symptoms. Mild cases can often be managed with lifestyle changes, dietary modifications, and over-the-counter medications. Severe cases may require prescription medications or surgical procedures.'
-    },
-    'Heart Attack': {
-        'description': 'Medical emergency caused by reduced blood flow to the heart muscle. Symptoms include chest pain or discomfort, shortness of breath, nausea, and lightheadedness. Prompt medical treatment is critical to prevent damage to the heart.',
-        'treatment': 'Treatment for a heart attack involves restoring blood flow to the heart muscle as quickly as possible to prevent further damage. This may include medications, such as clot-busting drugs or angioplasty, to open blocked arteries, and lifestyle changes to reduce the risk of future heart problems.'
-    },
-    'Varicose veins': {
-        'description': 'Enlarged, twisted veins usually found in the legs. Symptoms include pain, swelling, and bulging veins. Treatment options range from lifestyle changes to medical procedures.',
-        'treatment': 'Treatment for varicose veins depends on the severity of symptoms and may include lifestyle modifications (such as exercise and elevation of the legs), compression stockings, minimally invasive procedures (such as sclerotherapy or laser therapy), or surgery for severe cases.'
-    },
-    'Hypothyroidism': {
-        'description': 'Underactive thyroid gland leading to symptoms like fatigue, weight gain, cold sensitivity, dry skin, and depression. Treatment involves hormone replacement therapy.',
-        'treatment': 'Treatment for hypothyroidism involves taking synthetic thyroid hormone medication to replace the hormone your body is lacking. It is important to take the medication as prescribed and have regular check-ups to monitor thyroid function.'
-    },
-    'Hyperthyroidism': {
-        'description': 'Overactive thyroid gland causing symptoms such as weight loss, rapid heartbeat, sweating, anxiety, and tremors. Treatment options include medications, radioactive iodine therapy, or surgery.',
-        'treatment': 'Treatment for hyperthyroidism aims to reduce the production of thyroid hormones and alleviate symptoms. This may include antithyroid medications, radioactive iodine therapy to destroy thyroid cells, beta-blockers to manage symptoms, or surgery to remove part of the thyroid gland.'
-    },
-    'Hypoglycemia': {
-        'description': 'Low blood sugar levels leading to symptoms like shakiness, sweating, irritability, confusion, and fainting. It can occur in individuals with diabetes or as a result of other medical conditions or medications.',
-        'treatment': 'Treatment for hypoglycemia involves consuming fast-acting carbohydrates to raise blood sugar levels quickly. For people with diabetes, regular monitoring of blood sugar levels, adjustments to medication or insulin doses, and dietary modifications may be necessary to prevent hypoglycemic episodes.'
-    },
-    'Osteoarthritis': {
-        'description': 'Degenerative joint disease characterized by joint pain, stiffness, and swelling. Commonly affects the knees, hips, hands, and spine. Treatment involves pain management, exercise, and sometimes surgery.',
-        'treatment': 'Treatment for osteoarthritis focuses on relieving pain, improving joint function, and preventing further damage to the affected joints. This may include medications, physical therapy, lifestyle changes, and in severe cases, joint replacement surgery.'
-    },
-    'Arthritis': {
-        'description': 'Inflammation of the joints causing pain, swelling, and stiffness. There are many types of arthritis, including rheumatoid arthritis, osteoarthritis, and gout, each with different causes and treatments.',
-        'treatment': 'Treatment for arthritis aims to reduce pain, inflammation, and joint damage, improve joint function, and enhance quality of life. This may include medications, physical therapy, lifestyle changes, and in some cases, surgery.'
-    },
-    '(Vertigo) Paroxysmal Positional Vertigo': {
-        'description': 'A type of vertigo caused by sudden movements of the head, leading to brief episodes of dizziness and spinning sensations. Treatment involves specific head maneuvers to reposition displaced inner ear crystals.',
-        'treatment': 'Treatment for paroxysmal positional vertigo (BPPV) involves physical maneuvers or exercises to move the displaced inner ear crystals (canaliths) back into the correct position. These maneuvers are often performed by a healthcare professional and can provide rapid relief from symptoms.'
-    },
-    'Acne': {
-        'description': 'Skin condition characterized by pimples, blackheads, and whiteheads, typically on the face, chest, and back. It can be caused by hormonal changes, genetics, or bacteria.',
-        'treatment': 'Treatment for acne aims to reduce inflammation, unclog pores, and prevent new breakouts. This may include topical treatments (such as benzoyl peroxide or retinoids), oral medications (such as antibiotics or hormonal therapy), and lifestyle changes (such as skincare routines and diet modifications).'
-    },
-    'Urinary Tract Infection (UTI)': {
-        'description': 'Bacterial infection of the urinary tract, commonly causing symptoms such as frequent urination, burning sensation during urination, abdominal pain, and cloudy or bloody urine.',
-        'treatment': 'Treatment for urinary tract infections (UTIs) typically involves antibiotics to kill the bacteria causing the infection. The choice of antibiotic and duration of treatment depend on factors such as the type of bacteria and the severity of symptoms.'
-    },
-    'Psoriasis': {
-        'description': 'Chronic autoimmune condition causing rapid skin cell growth, leading to thick, red, scaly patches on the skin. Symptoms may also include itching and pain.',
-        'treatment': 'Treatment for psoriasis aims to reduce inflammation, slow down skin cell growth, and alleviate symptoms. This may include topical treatments (such as corticosteroids or retinoids), phototherapy (light therapy), oral medications (such as methotrexate or biologics), and lifestyle modifications.'
-    },
-    'Impetigo': {
-        'description': 'Highly contagious bacterial skin infection characterized by red sores or blisters that rupture and form yellowish crusts. Common in children and often treated with antibiotics.',
-        'treatment': 'Treatment for impetigo usually involves topical or oral antibiotics to kill the bacteria causing the infection. Keeping the affected area clean and dry can also help prevent the spread of impetigo.'
+            try:
+                # Create a dictionary to hold symptoms
+                symptoms = {}
+                for s in symptomslist:
+                    symptoms[s] = 0
+                
+                # Set symptoms to 1 where user has selected
+                for s in psymptoms:
+                    symptoms[s] = 1
+                
+                # Put all data in a test dataset
+                df_test = pd.DataFrame(columns=list(symptoms.keys()))
+                df_test.loc[0] = np.array(list(symptoms.values()))
+                
+                # Load pre-trained model
+                clf = load("./saved_model/random_forest.joblib")
+                result = clf.predict(df_test)
+                
+                # Get the predicted disease
+                predicted_disease = result[0]
+                
+                disease_details = {
+        'Fungal infection': {
+            'description': 'Fungal infections are caused by various types of fungi and can affect different parts of the body, such as the skin, nails, or internal organs. Symptoms vary depending on the type and location of the infection but may include itching, redness, swelling, and discomfort.',
+            'treatment': 'Treatment for fungal infections depends on the type and severity of the infection. It may include antifungal medications, topical creams, and lifestyle changes to prevent recurrence.'
+        },
+        'Allergy': {
+            'description': 'Allergies occur when the immune system overreacts to a harmless substance, such as pollen, pet dander, or certain foods. Symptoms range from mild to severe and can include sneezing, itching, rash, swelling, and difficulty breathing.',
+            'treatment': 'Allergy treatment aims to reduce symptoms and prevent allergic reactions. This may include allergen avoidance, medications such as antihistamines or corticosteroids, and allergy shots (immunotherapy) for long-term management.'
+        },
+        'GERD': {
+            'description': 'GERD is a chronic condition where stomach acid flows back into the esophagus, causing irritation and inflammation. Common symptoms include heartburn, regurgitation, chest pain, and difficulty swallowing.',
+            'treatment': 'Treatment for GERD involves lifestyle changes, medications to reduce stomach acid production or strengthen the lower esophageal sphincter, and in severe cases, surgery.'
+        },
+        'Chronic cholestasis': {
+            'description': 'Chronic cholestasis is a condition characterized by impaired bile flow from the liver, leading to the accumulation of bile acids in the liver and bloodstream. Symptoms may include jaundice, itching, fatigue, and pale stools.',
+            'treatment': 'Treatment for chronic cholestasis focuses on managing symptoms and addressing underlying causes. This may include medications to improve bile flow, dietary changes, and in severe cases, liver transplantation.'
+        },
+        'Drug Reaction': {
+            'description': 'Drug reactions can occur when the body reacts adversely to a medication. Symptoms vary widely and can range from mild rashes to severe allergic reactions, depending on the individual and the drug involved.',
+            'treatment': 'Treatment for drug reactions depends on the type and severity of symptoms. It may include discontinuing the offending medication, supportive care, and in severe cases, emergency medical treatment.'
+        },
+        'Peptic ulcer disease': {
+            'description': 'Peptic ulcer disease involves the formation of open sores in the lining of the stomach, small intestine, or esophagus. Common symptoms include abdominal pain, bloating, nausea, vomiting, and heartburn.',
+            'treatment': 'Treatment for peptic ulcer disease aims to reduce symptoms, promote healing of ulcers, and prevent complications. This may include medications to reduce stomach acid production, antibiotics to eradicate H. pylori bacteria, and lifestyle changes.'
+        },
+        'AIDS': {
+            'description': 'AIDS is a condition caused by the human immunodeficiency virus (HIV), which weakens the immune system, making individuals more susceptible to infections and certain cancers. Symptoms include recurrent infections, weight loss, fatigue, and swollen lymph nodes.',
+            'treatment': 'Treatment for AIDS involves antiretroviral therapy (ART) to suppress HIV replication, strengthen the immune system, and prevent disease progression. It also includes medications to treat and prevent opportunistic infections and supportive care.'
+        },
+        'Diabetes': {
+            'description': 'Diabetes is a chronic condition characterized by high blood sugar levels, either due to inadequate insulin production or the body\'s inability to use insulin effectively. Symptoms include increased thirst, frequent urination, fatigue, and blurred vision.',
+            'treatment': 'Treatment for diabetes involves blood sugar monitoring, lifestyle changes (such as diet and exercise), medications (including insulin and oral medications), and regular medical check-ups to prevent complications.'
+        },
+        'Gastroenteritis': {
+            'description': 'Gastroenteritis, often referred to as the stomach flu, is inflammation of the stomach and intestines, typically caused by viral or bacterial infections. Symptoms include diarrhea, vomiting, abdominal cramps, and fever.',
+            'treatment': 'Treatment for gastroenteritis focuses on preventing dehydration, managing symptoms, and addressing underlying causes. This may include fluid and electrolyte replacement, dietary adjustments, and in some cases, medications to relieve symptoms.'
+        },
+        'Bronchial Asthma': {
+            'description': 'Asthma is a chronic respiratory condition characterized by inflammation and narrowing of the airways, leading to recurrent episodes of wheezing, coughing, chest tightness, and shortness of breath.',
+            'treatment': 'Treatment for asthma involves long-term management to control symptoms and prevent asthma attacks. This may include medications (such as bronchodilators and corticosteroids), avoidance of triggers, and lifestyle modifications.'
+        },
+        'Hypertension': {
+            'description': 'Hypertension, or high blood pressure, is a common condition in which the force of blood against the artery walls is consistently too high. Often called the "silent killer," hypertension typically has no symptoms but can lead to serious health complications such as heart disease, stroke, and kidney damage if left untreated.',
+            'treatment': 'Treatment for hypertension involves lifestyle changes (such as diet, exercise, and stress management) and medications to lower blood pressure and reduce the risk of complications.'
+        },
+        'Migraine': {
+            'description': 'Migraine is a neurological disorder characterized by recurrent, intense headaches often accompanied by nausea, vomiting, and sensitivity to light and sound. Migraine attacks can last for hours to days and significantly impact daily life.',
+            'treatment': 'Treatment for migraines aims to prevent attacks and relieve symptoms when they occur. This may include medications to prevent migraines (prophylactic medications), acute treatments for migraine attacks, and lifestyle changes.'
+        },
+        'Cervical spondylosis': {
+            'description': 'Cervical spondylosis is a degenerative condition affecting the cervical spine (neck) caused by age-related changes in the discs and joints. Symptoms may include neck pain, stiffness, headaches, and numbness or weakness in the arms or hands.',
+            'treatment': 'Treatment for cervical spondylosis focuses on managing symptoms and preventing complications. This may include medications for pain and inflammation, physical therapy, neck exercises, and in severe cases, surgery.'
+        },
+        'Paralysis (brain hemorrhage)': {
+            'description': 'Paralysis resulting from a brain hemorrhage occurs when bleeding in the brain damages brain tissue, leading to loss of function in certain parts of the body. The severity and location of the hemorrhage determine the extent of paralysis, which can range from mild weakness to complete loss of movement.',
+            'treatment': 'Treatment for paralysis due to brain hemorrhage depends on the extent of damage and the location of the hemorrhage. It may include medications to reduce swelling and prevent further bleeding, rehabilitation therapy to regain function, and supportive care.'
+        },
+        'Jaundice': {
+            'description': 'Jaundice is a condition characterized by yellowing of the skin and eyes due to high levels of bilirubin in the blood. It can occur as a result of various underlying conditions, such as liver disease, hemolytic anemia, or bile duct obstruction.',
+            'treatment': 'Treatment for jaundice depends on the underlying cause. It may include medications to treat liver disease or infections, procedures to remove obstructions in the bile ducts, and supportive care to manage symptoms.'
+        },
+        'Malaria': {
+            'description': 'Malaria is a mosquito-borne infectious disease caused by Plasmodium parasites. Symptoms typically include fever, chills, sweats, headache, muscle aches, and fatigue. Without prompt treatment, malaria can be life-threatening.',
+            'treatment': 'Treatment for malaria involves antimalarial medications to kill the parasites in the bloodstream. The choice of medication depends on the type of malaria parasite and its resistance to drugs.'
+        },
+        'Chicken pox': {
+            'description': 'Chickenpox is a highly contagious viral infection caused by the varicella-zoster virus. It is characterized by an itchy rash of fluid-filled blisters that eventually crust over. Other symptoms may include fever, headache, and fatigue.',
+            'treatment': 'Treatment for chickenpox aims to relieve symptoms and prevent complications. This may include over-the-counter medications for fever and itching, antiviral medications for severe cases, and measures to prevent scratching and secondary infections.'
+        },
+        'Dengue': {
+            'description': 'Dengue fever is a mosquito-borne viral infection common in tropical and subtropical regions. Symptoms include high fever, severe headache, pain behind the eyes, joint and muscle pain, rash, and mild bleeding.',
+            'treatment': 'Treatment for dengue fever focuses on relieving symptoms and preventing complications. This may include rest, hydration, pain relievers (but not aspirin), and medical monitoring for signs of severe dengue.'
+        },
+        'Typhoid': {
+            'description': 'Typhoid fever is a bacterial infection caused by Salmonella typhi. Symptoms include sustained high fever, weakness, stomach pain, headache, and loss of appetite. In severe cases, complications such as intestinal perforation can occur.',
+            'treatment': 'Treatment for typhoid fever involves antibiotics to kill the Salmonella bacteria. In addition to medications, supportive care such as fluids and electrolyte replacement may be necessary.'
+        },
+        'hepatitis A': {
+            'description': 'Hepatitis A is a viral liver infection spread through contaminated food or water. Symptoms include fever, fatigue, nausea, jaundice, and loss of appetite. Most cases resolve without treatment.',
+            'treatment': 'Treatment for hepatitis A focuses on relieving symptoms and preventing complications. This may include rest, hydration, and supportive care. In some cases, hospitalization may be necessary.'
+        },
+        'Hepatitis B': {
+            'description': 'Hepatitis B is a liver infection caused by the hepatitis B virus, transmitted through contact with infected blood or bodily fluids. Symptoms include fatigue, abdominal pain, and jaundice. Chronic infection can lead to severe liver damage and cancer.',
+            'treatment': 'Treatment for hepatitis B aims to manage symptoms, prevent complications, and reduce the risk of transmission. This may include antiviral medications, regular monitoring, and vaccination for close contacts.'
+        },
+        'Hepatitis C': {
+            'description': 'Hepatitis C is a liver infection transmitted through contact with infected blood. Often asymptomatic, it can lead to severe liver damage, including cirrhosis and cancer. Treatment with antiviral medications is available.',
+            'treatment': 'Treatment for hepatitis C involves antiviral medications to suppress the virus and prevent liver damage. The choice of medication and duration of treatment depend on factors such as the genotype of the virus and the extent of liver damage.'
+        },
+        'Hepatitis D': {
+            'description': 'Hepatitis D occurs only in individuals already infected with hepatitis B. Symptoms are similar to hepatitis B but can be more severe. Prevention through hepatitis B vaccination is crucial.',
+            'treatment': 'Treatment for hepatitis D focuses on managing symptoms and preventing complications. This may include antiviral medications for hepatitis B and supportive care to relieve symptoms.'
+        },
+        'Hepatitis E': {
+            'description': 'Hepatitis E is a liver infection spread through contaminated water or food. Symptoms are similar to hepatitis A and usually resolve without treatment. Pregnant women and those with liver disease are at higher risk of complications.',
+            'treatment': 'Treatment for hepatitis E is usually supportive, focusing on relieving symptoms and preventing dehydration. In severe cases, hospitalization and supportive care may be necessary.'
+        },
+        'Alcoholic hepatitis': {
+            'description': 'Liver inflammation caused by excessive alcohol consumption. Symptoms include jaundice, abdominal pain, nausea, and fever. Severe cases can lead to liver failure.',
+            'treatment': 'Treatment for alcoholic hepatitis involves abstinence from alcohol, supportive care to manage symptoms, and interventions to prevent further liver damage. In severe cases, hospitalization and medical interventions may be necessary.'
+        },
+        'Tuberculosis': {
+            'description': 'Infectious disease caused by the bacteria Mycobacterium tuberculosis. Symptoms include persistent cough, fever, weight loss, and night sweats. It primarily affects the lungs but can also involve other parts of the body.',
+            'treatment': 'Treatment for tuberculosis involves a combination of antibiotics taken for several months. It is essential to complete the full course of treatment to prevent the development of drug-resistant strains.'
+        },
+        'Common Cold': {
+            'description': 'Viral infection of the upper respiratory tract, causing symptoms like runny nose, sore throat, cough, and congestion. Usually resolves within a week with rest and home remedies.',
+            'treatment': 'Treatment for the common cold focuses on relieving symptoms and supporting the body\'s immune response. This may include rest, hydration, over-the-counter medications for symptom relief, and avoiding close contact with others to prevent transmission.'
+        },
+        'Pneumonia': {
+            'description': 'Inflammation of the lungs typically caused by bacterial, viral, or fungal infections. Symptoms include fever, chills, cough, chest pain, and difficulty breathing. Treatment involves antibiotics or antiviral medications.',
+            'treatment': 'Treatment for pneumonia depends on the underlying cause and severity of symptoms. It may include antibiotics for bacterial pneumonia, antiviral medications for viral pneumonia, supportive care to relieve symptoms, and hospitalization for severe cases.'
+        },
+        'Dimorphic hemmorhoids(piles)': {
+            'description': 'Swollen veins in the rectum or anus causing discomfort, itching, and bleeding. Can be internal or external and may require lifestyle changes, medication, or surgery for severe cases.',
+            'treatment': 'Treatment for hemorrhoids depends on the severity of symptoms. Mild cases can often be managed with lifestyle changes, dietary modifications, and over-the-counter medications. Severe cases may require prescription medications or surgical procedures.'
+        },
+        'Heart attack': {
+            'description': 'Medical emergency caused by reduced blood flow to the heart muscle. Symptoms include chest pain or discomfort, shortness of breath, nausea, and lightheadedness. Prompt medical treatment is critical to prevent damage to the heart.',
+            'treatment': 'Treatment for a heart attack involves restoring blood flow to the heart muscle as quickly as possible to prevent further damage. This may include medications, such as clot-busting drugs or angioplasty, to open blocked arteries, and lifestyle changes to reduce the risk of future heart problems.'
+        },
+        'Varicose veins': {
+            'description': 'Enlarged, twisted veins usually found in the legs. Symptoms include pain, swelling, and bulging veins. Treatment options range from lifestyle changes to medical procedures.',
+            'treatment': 'Treatment for varicose veins depends on the severity of symptoms and may include lifestyle modifications (such as exercise and elevation of the legs), compression stockings, minimally invasive procedures (such as sclerotherapy or laser therapy), or surgery for severe cases.'
+        },
+        'Hypothyroidism': {
+            'description': 'Underactive thyroid gland leading to symptoms like fatigue, weight gain, cold sensitivity, dry skin, and depression. Treatment involves hormone replacement therapy.',
+            'treatment': 'Treatment for hypothyroidism involves taking synthetic thyroid hormone medication to replace the hormone your body is lacking. It is important to take the medication as prescribed and have regular check-ups to monitor thyroid function.'
+        },
+        'Hyperthyroidism': {
+            'description': 'Overactive thyroid gland causing symptoms such as weight loss, rapid heartbeat, sweating, anxiety, and tremors. Treatment options include medications, radioactive iodine therapy, or surgery.',
+            'treatment': 'Treatment for hyperthyroidism aims to reduce the production of thyroid hormones and alleviate symptoms. This may include antithyroid medications, radioactive iodine therapy to destroy thyroid cells, beta-blockers to manage symptoms, or surgery to remove part of the thyroid gland.'
+        },
+        'Hypoglycemia': {
+            'description': 'Low blood sugar levels leading to symptoms like shakiness, sweating, irritability, confusion, and fainting. It can occur in individuals with diabetes or as a result of other medical conditions or medications.',
+            'treatment': 'Treatment for hypoglycemia involves consuming fast-acting carbohydrates to raise blood sugar levels quickly. For people with diabetes, regular monitoring of blood sugar levels, adjustments to medication or insulin doses, and dietary modifications may be necessary to prevent hypoglycemic episodes.'
+        },
+        'Osteoarthritis': {
+            'description': 'Degenerative joint disease characterized by joint pain, stiffness, and swelling. Commonly affects the knees, hips, hands, and spine. Treatment involves pain management, exercise, and sometimes surgery.',
+            'treatment': 'Treatment for osteoarthritis focuses on relieving pain, improving joint function, and preventing further damage to the affected joints. This may include medications, physical therapy, lifestyle changes, and in severe cases, joint replacement surgery.'
+        },
+        'Arthritis': {
+            'description': 'Inflammation of the joints causing pain, swelling, and stiffness. There are many types of arthritis, including rheumatoid arthritis, osteoarthritis, and gout, each with different causes and treatments.',
+            'treatment': 'Treatment for arthritis aims to reduce pain, inflammation, and joint damage, improve joint function, and enhance quality of life. This may include medications, physical therapy, lifestyle changes, and in some cases, surgery.'
+        },
+        '(vertigo) Paroymsal Positional Vertigo': {
+            'description': 'A type of vertigo caused by sudden movements of the head, leading to brief episodes of dizziness and spinning sensations. Treatment involves specific head maneuvers to reposition displaced inner ear crystals.',
+            'treatment': 'Treatment for paroxysmal positional vertigo (BPPV) involves physical maneuvers or exercises to move the displaced inner ear crystals (canaliths) back into the correct position. These maneuvers are often performed by a healthcare professional and can provide rapid relief from symptoms.'
+        },
+        'Acne': {
+            'description': 'Skin condition characterized by pimples, blackheads, and whiteheads, typically on the face, chest, and back. It can be caused by hormonal changes, genetics, or bacteria.',
+            'treatment': 'Treatment for acne aims to reduce inflammation, unclog pores, and prevent new breakouts. This may include topical treatments (such as benzoyl peroxide or retinoids), oral medications (such as antibiotics or hormonal therapy), and lifestyle changes (such as skincare routines and diet modifications).'
+        },
+        'Urinary tract infection': {
+            'description': 'Bacterial infection of the urinary tract, commonly causing symptoms such as frequent urination, burning sensation during urination, abdominal pain, and cloudy or bloody urine.',
+            'treatment': 'Treatment for urinary tract infections (UTIs) typically involves antibiotics to kill the bacteria causing the infection. The choice of antibiotic and duration of treatment depend on factors such as the type of bacteria and the severity of symptoms.'
+        },
+        'Psoriasis': {
+            'description': 'Chronic autoimmune condition causing rapid skin cell growth, leading to thick, red, scaly patches on the skin. Symptoms may also include itching and pain.',
+            'treatment': 'Treatment for psoriasis aims to reduce inflammation, slow down skin cell growth, and alleviate symptoms. This may include topical treatments (such as corticosteroids or retinoids), phototherapy (light therapy), oral medications (such as methotrexate or biologics), and lifestyle modifications.'
+        },
+        'Impetigo': {
+            'description': 'Highly contagious bacterial skin infection characterized by red sores or blisters that rupture and form yellowish crusts. Common in children and often treated with antibiotics.',
+            'treatment': 'Treatment for impetigo usually involves topical or oral antibiotics to kill the bacteria causing the infection. Keeping the affected area clean and dry can also help prevent the spread of impetigo.'
+        }
     }
-}
 
 
-            # Define specialists
-            specialists = {
-                'Rheumatologist': ['Osteoarthristis', 'Arthritis'],
-                'Cardiologist': ['Heart attack', 'Bronchial Asthma', 'Hypertension'],
-                'ENT specialist': ['(vertigo) Paroymsal Positional Vertigo', 'Hypothyroidism'],
-                'Neurologist': ['Varicose veins', 'Paralysis (brain hemorrhage)', 'Migraine', 'Cervical spondylosis'],
-                'Allergist': ['Allergy', 'Pneumonia', 'AIDS', 'Common Cold', 'Tuberculosis', 'Malaria', 'Dengue', 'Typhoid'],
-                'Urologist': ['Urinary tract infection', 'Dimorphic hemmorhoids(piles)'],
-                'Dermatologist': ['Acne', 'Chicken pox', 'Fungal infection', 'Psoriasis', 'Impetigo'],
-                'Gastroenterologist': ['Peptic ulcer diseae', 'GERD', 'Chronic cholestasis', 'Drug Reaction', 'Gastroenteritis', 'Hepatitis E',
-                                       'Alcoholic hepatitis', 'Jaundice', 'hepatitis A', 'Hepatitis B', 'Hepatitis C', 'Hepatitis D',
-                                       'Diabetes', 'Hypoglycemia']
-            }
-            
-            # Find the specialist to consult
-            consult_doctor = "Other"
-            for specialist, diseases in specialists.items():
-                if predicted_disease in diseases:
-                    consult_doctor = specialist
-                    break
+                # Define specialists
+                specialists = {
+                    'Rheumatologist': ['Osteoarthristis', 'Arthritis'],
+                    'Cardiologist': ['Heart attack', 'Bronchial Asthma', 'Hypertension'],
+                    'ENT specialist': ['(vertigo) Paroymsal Positional Vertigo', 'Hypothyroidism'],
+                    'Neurologist': ['Varicose veins', 'Paralysis (brain hemorrhage)', 'Migraine', 'Cervical spondylosis'],
+                    'Allergist': ['Allergy', 'Pneumonia', 'AIDS', 'Common Cold', 'Tuberculosis', 'Malaria', 'Dengue', 'Typhoid'],
+                    'Urologist': ['Urinary tract infection', 'Dimorphic hemmorhoids(piles)'],
+                    'Dermatologist': ['Acne', 'Chicken pox', 'Fungal infection', 'Psoriasis', 'Impetigo'],
+                    'Gastroenterologist': ['Peptic ulcer disease', 'GERD', 'Chronic cholestasis', 'Drug Reaction', 'Gastroenteritis', 'Hepatitis E',
+                                        'Alcoholic hepatitis', 'Jaundice', 'hepatitis A', 'Hepatitis B', 'Hepatitis C', 'Hepatitis D',
+                                        'Diabetes', 'Hypoglycemia']
+                }
+                
+                # Find the specialist to consult
+                consult_doctor = "Other"
+                for specialist, diseases in specialists.items():
+                    if predicted_disease in diseases:
+                        consult_doctor = specialist
+                        break
 
-            predicted_disease_details = disease_details.get(predicted_disease, {'description': 'No details available', 'treatment': 'No details available'})
+                predicted_disease_details = disease_details.get(predicted_disease, {'description': 'No details available', 'treatment': 'No details available'})
 
-                # Fetch consulting doctor from database
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT d_name FROM doctors WHERE d_spec = %s", (consult_doctor,))
-            consulting_doctor = cur.fetchone()
-            if consulting_doctor:
-                consult_doctor_name = consulting_doctor['d_name']
-            else:
-                consult_doctor_name = "Other"
-            # Cleanup
-            del df_test
-            
-            return jsonify({'predicteddisease': predicted_disease, 'consultdoctor': consult_doctor_name, 'consult':consult_doctor, 'predicteddiseasedetails': predicted_disease_details,})
+                    # Fetch consulting doctor from database
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT d_name FROM doctors WHERE d_spec = %s", (consult_doctor,))
+                consulting_doctor = cur.fetchone()
+                if consulting_doctor:
+                    consult_doctor_name = consulting_doctor['d_name']
+                else:
+                    consult_doctor_name = "Other"
+                # Cleanup
+                del df_test
+                
+                return jsonify({'predicteddisease': predicted_disease, 'consultdoctor': consult_doctor_name, 'consult':consult_doctor, 'predicteddiseasedetails': predicted_disease_details,})
+            except Exception as e:
+                print(f"ERROR: {e}")
+                return jsonify({'error': str(e)}), 500
 
 
 

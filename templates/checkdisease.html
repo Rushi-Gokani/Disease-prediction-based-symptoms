@@ -95,7 +95,7 @@
   background-color: #fff; /* Default background color */
 }
 
-.list-box option[selected] {
+.list-box option:checked, .list-box option.selected {
   background-color: #409cc5; /* Selected background color */
   color: #fff; /* Selected text color */
 }
@@ -104,7 +104,7 @@
   background-color: rgba(0, 0, 0, .001); /* Focused background color */
 }
 /* Style selected options */
-option.selected {
+option:checked, option.selected {
   background-color: #409cc5; /* Blue background */
   color: #ffffff; /* White text color */
 }
@@ -163,6 +163,9 @@ document.getElementById("symptomForm").addEventListener("submit", function(event
     })
     .then(response => response.json())
     .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
         var resultElement = document.getElementById("result");
         resultElement.innerHTML = "<p><b>Predicted Disease:</b> " + data.predicteddisease + "</p><p><b>Consult to :</b> " + data.consult + "</p><p><b>Consulting Specialist:</b> Dr." + data.consultdoctor + "</p>  <p><strong>Description:</strong> " + data.predicteddiseasedetails.description + "</p><p><strong>Treatment:</strong> " + data.predicteddiseasedetails.treatment + "</p> <button style='background:white; padding:10px; border-radius:10px; border:0px solid;'><a href='/appoinment'> Book Appoinment </button>";
         
@@ -170,12 +173,13 @@ document.getElementById("symptomForm").addEventListener("submit", function(event
     })
     .catch(error => {
         console.error('Error:', error);
+        var resultElement = document.getElementById("result");
+        resultElement.innerHTML = "<p style='color:red;'>An error occurred: " + error + "</p>";
+        resultElement.classList.add("result-style");
     });
 });
 
-
-
-        document.getElementById("searchSymptom").addEventListener("input", function() {
+document.getElementById("searchSymptom").addEventListener("input", function() {
     var input, filter, select, option, i;
     input = document.getElementById("searchSymptom");
     filter = input.value.toUpperCase();
@@ -192,10 +196,17 @@ document.getElementById("symptomForm").addEventListener("submit", function(event
 
 const selectElement = document.getElementById("symptomsDropdown");
 
-selectElement.addEventListener("click", function(event) {
+selectElement.addEventListener("mousedown", function(event) {
     const option = event.target;
     if (option.tagName === 'OPTION') {
-        option.classList.toggle('selected');
+        event.preventDefault();
+        option.selected = !option.selected;
+        if (option.selected) {
+            option.classList.add('selected');
+        } else {
+            option.classList.remove('selected');
+        }
+        selectElement.focus();
     }
 });
 
