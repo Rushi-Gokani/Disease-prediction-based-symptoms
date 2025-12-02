@@ -47,7 +47,18 @@ def predict_disease_from_symptom(symptom_list):
     df_test.loc[0] = np.array(list(symptoms.values()))
     
     # Load pre-trained model
-    clf = load("./saved_model/random_forest.joblib")
+    try:
+        clf = load("./saved_model/random_forest.joblib")
+    except Exception as e:
+        print(f"Error loading model: {e}. Attempting to re-train...")
+        import importlib
+        import main
+        importlib.reload(main)  # Force reload to get latest code
+        from main import DiseasePrediction
+        dp = DiseasePrediction(model_name='random_forest')
+        dp.train_model()
+        # Use the trained classifier directly from memory
+        clf = dp.clf
     result = clf.predict(df_test)
     
     # Cleanup
@@ -510,7 +521,7 @@ symptomslist = ['itching', 'skin_rash', 'nodal_skin_eruptions', 'continuous_snee
                 'throat_irritation', 'redness_of_eyes', 'sinus_pressure', 'runny_nose', 'congestion', 'chest_pain',
                 'weakness_in_limbs', 'fast_heart_rate', 'pain_during_bowel_movements', 'pain_in_anal_region', 'bloody_stool',
                 'irritation_in_anus', 'neck_pain', 'dizziness', 'cramps', 'bruising', 'obesity', 'swollen_legs',
-                'swollen_blood_vessels', 'puffy_face_and_eyes', 'enlarged_thyroid', 'brittle_nails', 'swollen_extremities',
+                'swollen_blood_vessels', 'puffy_face_and_eyes', 'enlarged_thyroid', 'brittle_nails', 'swollen_extremeties',
                 'excessive_hunger', 'extra_marital_contacts', 'drying_and_tingling_lips', 'slurred_speech', 'knee_pain',
                 'hip_joint_pain', 'muscle_weakness', 'stiff_neck', 'swelling_joints', 'movement_stiffness', 'spinning_movements',
                 'loss_of_balance', 'unsteadiness', 'weakness_of_one_body_side', 'loss_of_smell', 'bladder_discomfort',
@@ -519,7 +530,7 @@ symptomslist = ['itching', 'skin_rash', 'nodal_skin_eruptions', 'continuous_snee
                 'abnormal_menstruation', 'dischromic _patches', 'watering_from_eyes', 'increased_appetite', 'polyuria',
                 'family_history', 'mucoid_sputum', 'rusty_sputum', 'lack_of_concentration', 'visual_disturbances',
                 'receiving_blood_transfusion', 'receiving_unsterile_injections', 'coma', 'stomach_bleeding',
-                'distention_of_abdomen', 'history_of_alcohol_consumption', 'fluid_overload', 'blood_in_sputum',
+                'distention_of_abdomen', 'history_of_alcohol_consumption', 'fluid_overload.1', 'blood_in_sputum',
                 'prominent_veins_on_calf', 'palpitations', 'painful_walking', 'pus_filled_pimples', 'blackheads',
                 'scurring', 'skin_peeling', 'silver_like_dusting', 'small_dents_in_nails', 'inflammatory_nails',
                 'blister', 'red_sore_around_nose', 'yellow_crust_ooze']
@@ -552,7 +563,18 @@ def check_disease():
                 df_test.loc[0] = np.array(list(symptoms.values()))
                 
                 # Load pre-trained model
-                clf = load("./saved_model/random_forest.joblib")
+                try:
+                    clf = load("./saved_model/decision_tree.joblib")
+                except Exception as e:
+                    print(f"Error loading model: {e}. Attempting to re-train...")
+                    import importlib
+                    import main
+                    importlib.reload(main)  # Force reload to get latest code
+                    from main import DiseasePrediction
+                    dp = DiseasePrediction(model_name='decision_tree')
+                    dp.train_model()
+                    # Use the trained classifier directly from memory
+                    clf = dp.clf
                 result = clf.predict(df_test)
                 
                 # Get the predicted disease

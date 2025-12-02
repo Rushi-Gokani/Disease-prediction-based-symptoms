@@ -42,6 +42,8 @@ class DiseasePrediction:
         df_train = pd.read_csv(self.config['dataset']['training_data_path'])
         cols = df_train.columns
         cols = cols[:-2]
+        # Filter out prognosis and unnamed columns explicitly
+        cols = [col for col in cols if col != 'prognosis' and not str(col).startswith('Unnamed')]
         train_features = df_train[cols]
         train_labels = df_train['prognosis']
 
@@ -60,6 +62,8 @@ class DiseasePrediction:
         df_test = pd.read_csv(self.config['dataset']['test_data_path'])
         cols = df_test.columns
         cols = cols[:-1]
+        # Filter out prognosis and unnamed columns explicitly
+        cols = [col for col in cols if col != 'prognosis' and not str(col).startswith('Unnamed')]
         test_features = df_test[cols]
         test_labels = df_test['prognosis']
 
@@ -76,7 +80,7 @@ class DiseasePrediction:
     # Features Correlation
     def _feature_correlation(self, data_frame=None, show_fig=False):
         # Get Feature Correlation
-        corr = data_frame.corr()
+        corr = data_frame.corr(numeric_only=True)
         sn.heatmap(corr, square=True, annot=False, cmap="YlGnBu")
         plt.title("Feature Correlation")
         plt.tight_layout()
