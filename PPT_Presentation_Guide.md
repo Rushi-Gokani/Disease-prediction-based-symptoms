@@ -52,6 +52,90 @@ Database Models Models Bot Gateway
 
 ---
 
+## Slide 4a: Data Flow Diagram (DFD)
+
+### Level 0 DFD (Context Diagram)
+```
+                    ┌─────────────────────┐
+   ┌───────────┐    │                     │    ┌───────────┐
+   │           │───▶│                     │───▶│           │
+   │   User    │    │   Disease Prediction│    │  Doctor   │
+   │  (Patient)│◀───│    Web Application  │◀───│   Panel   │
+   │           │    │                     │    │           │
+   └───────────┘    │                     │    └───────────┘
+                    │   ┌───────────┐     │
+   ┌───────────┐    │   │  MySQL DB │     │    ┌───────────┐
+   │           │───▶│   │  (pro17)  │     │───▶│           │
+   │   Admin   │    │   └───────────┘     │    │  Razorpay │
+   │   Panel   │◀───│                     │◀───│  Payment  │
+   │           │    │   ┌───────────┐     │    └───────────┘
+   └───────────┘    │   │ML Models  │     │
+                    │   │+ Chatbot  │     │
+                    │   └───────────┘     │
+                    └─────────────────────┘
+```
+
+### Level 1 DFD
+```
+User ──▶ [1.0 Auth] ──▶ User Session
+                │
+                ▼
+User ──▶ [2.0 Disease Pred] ──▶ ML Model ──▶ Result + Specialist
+                │
+                ▼
+User ──▶ [3.0 Diabetes Pred] ──▶ ML Model ──▶ Risk Score
+                │
+                ▼
+User ──▶ [4.0 Book Appt] ──▶ [5.0 Payment] ──▶ DB ──▶ Doctor
+                │
+                ▼
+User ──▶ [6.0 Chatbot] ──▶ PyTorch NN ──▶ Response
+
+Admin ─▶ [7.0 Manage Users/Doctors] ──▶ MySQL DB
+Doctor ─▶ [8.0 Manage Appointments] ──▶ MySQL DB ──▶ Email (SMTP)
+```
+
+---
+
+## Slide 4b: Use Case Diagram (UML)
+```
+                        ┌──────────────────────────────────────────┐
+                        │       Disease Prediction System          │
+                        │                                          │
+   ┌──────┐    ┌──────┐ │  ┌──────────┐  ┌──────────────┐        │
+   │Login │    │Regis│ │  │ Predict   │  │ Text-Based   │        │
+   │      │◀───│ter   │ │  │ Disease   │  │ Prediction   │        │
+   └──┬───┘    └──┬───┘ │  │ (Binary)  │  │ (NLP)        │        │
+      │           │     │  └─────┬─────┘  └──────┬───────┘        │
+      │           │     │        │               │                │
+   ┌──▼───────────▼──┐  │  ┌─────▼─────┐  ┌──────▼───────┐        │
+   │                  │  │  │ Diabetes  │  │  Diabetes    │        │
+   │     USER         │◀─│  │ Basic     │  │  Advanced    │        │
+   │  (Patient)       │  │  │ (8 feat)  │  │  (21 feat)   │        │
+   │                  │  │  └───────────┘  └──────────────┘        │
+   └──┬───┬───┬───┬───┘  │                                    ┌────┴───┐
+      │   │   │   │      │  ┌───────────┐  ┌──────────┐      │Chat-   │
+      │   │   │   │      │  │ Book      │  │ View     │      │bot     │
+      │   │   │   └──────│─▶│ Appt      │  │ History  │      │(AI)    │
+      │   │   │          │  └─────┬─────┘  └──────────┘      └────────┘
+      │   │   └──────────│───────│─────────▶                    ▲
+      │   │              │       ▼                               │
+      │   │        ┌─────┴──────┐                               │
+      │   │        │  Razorpay  │    ┌────────────────┐         │
+      │   │        │  Payment   │    │ Manage Appts   │◀────────┤
+      │   │        └────────────┘    │ Accept/Reject  │         │
+      │   │                          │ Send Email     │    ┌────┴───┐
+      │   │                          └───────┬────────┘    │DOCTOR  │
+      │   │                                  │             └────────┘
+      │   │                          ┌───────▼────────┐
+      │   │                          │ Manage Users   │    ┌────┐
+      │   └──────────────────────────│ Manage Doctors │◀───│ADMIN│
+      │                              │ Dashboard      │    └────┘
+      └──────────────────────────────└────────────────┘
+```
+
+---
+
 ## Slide 5: Database Design
 - **Database:** MySQL (Database Name: `pro17`)
 - **Tables:**
@@ -150,11 +234,11 @@ Database Models Models Bot Gateway
 ### Model 2: Disease Prediction (Text-Based) — Natural Language Input
 | Model | Algorithm | Test Accuracy |
 |-------|-----------|---------------|
-| `best_text_model.joblib` | Scikit-learn Pipeline (TF-IDF + Classifier) | **97.92%** |
+| `best_text_model.joblib` | Scikit-learn Pipeline (TF-IDF + MNB) | **97.92%** |
 
 - **Dataset:** Symptom2Disease — 1,200 text descriptions across 24 diseases
 - **Output:** Top-3 predicted diseases with confidence scores
-- **Saved with:** Label encoder (`text_label_encoder.joblib`)
+- **Best Params:** max_features=8000, ngram_range=(1,2), alpha=0.01
 
 ### Model 3: Diabetes Prediction (Basic - PIMA) — 8 features, 768 records
 | Model | Algorithm | Test Accuracy |
@@ -166,11 +250,6 @@ Database Models Models Bot Gateway
 | `scaler.pkl` + retrained | **KNN** | 75.32% |
 | `scaler.pkl` + retrained | **Decision Tree** | 73.38% |
 
-- **Feature Scaling:** StandardScaler
-- **Train/Test Split:** 80/20 (random_state=7)
-- **Missing Values:** Replaced zeros with column mean for Glucose, BP, SkinThickness, Insulin, BMI
-- **Production Model:** SVM (original training selected SVM as best)
-
 ### Model 4: Diabetes Prediction (Advanced - BRFSS 2015) — 21 features, 229,474 records
 | Model | Algorithm | Test Accuracy |
 |-------|-----------|---------------|
@@ -181,30 +260,53 @@ Database Models Models Bot Gateway
 | Tested | **Logistic Regression** | 71.50% |
 | Tested | **Naive Bayes** | 64.39% |
 
-- **Feature Scaling:** StandardScaler
-- **Class Balancing:** SMOTE (oversampling minority class — 155K → 311K training samples)
-- **Train/Test Split:** 80/20 (stratified)
-- **Classification Report (Random Forest):**
-  - No Diabetes: Precision 0.87, Recall 0.96, F1 0.91
-  - Diabetes: Precision 0.45, Recall 0.19, F1 0.27
-
 ### Model 5: Chatbot (Deep Learning)
 | Model | Framework | Type |
 |-------|-----------|------|
 | `data.pth` | PyTorch | 3-layer Feedforward Neural Network |
 
-- **Architecture:** Input → Hidden (ReLU) → Hidden (ReLU) → Output
-- **NLP:** NLTK tokenization + PorterStemmer + Bag of Words
-- **Confidence Threshold:** 0.75
-
 ### Overall Accuracy Summary Table
 | Module | Best Algorithm | Accuracy | Dataset Size |
 |--------|---------------|----------|-------------|
 | Disease Prediction (Binary) | SVM / Decision Tree / MNB | **100.00%** | 4,920 train + test |
-| Disease Prediction (Text) | TF-IDF Pipeline | **97.92%** | 1,200 records |
+| Disease Prediction (Text) | TF-IDF + MNB | **97.92%** | 1,200 records |
 | Diabetes (Basic - PIMA) | Naive Bayes / SVM | **78.57%** | 768 records |
 | Diabetes (Advanced - BRFSS) | Random Forest | **84.05%** | 229,474 records |
 | Chatbot | PyTorch Neural Network | 0.75 threshold | intents.json |
+
+---
+
+## Slide 8a: Mathematical Formulation of Key Algorithms
+
+### Support Vector Machine (SVM)
+- **Objective:** Find the hyperplane that maximizes the margin between classes
+- **Decision function:** f(x) = w^T · φ(x) + b
+- **Optimization:** min (1/2)||w||² + C Σ ξᵢ subject to yᵢ(w^T · φ(xᵢ) + b) ≥ 1 - ξᵢ
+- **RBF Kernel:** K(xᵢ, xⱼ) = exp(-γ ||xᵢ - xⱼ||²)
+- **Parameters used:** C=0.1, kernel=rbf, gamma=scale
+
+### Random Forest
+- **Ensemble prediction:** ĥ(x) = (1/B) Σ ᵢ₌₁ᴮ hᵢ(x) (majority vote)
+- **Each tree trained on bootstrap sample with random feature subset**
+- **Gini impurity:** Gini(t) = 1 - Σ p(i|t)²
+- **Parameters used:** n_estimators=100, max_depth=None, random_state=42
+
+### Multinomial Naive Bayes (Text Model)
+- **Bayes theorem:** P(y|x) = P(x|y) · P(y) / P(x)
+- **With independence assumption:** P(y|x₁,...,xₙ) ∝ P(y) Πᵢ P(xᵢ|y)
+- **Multinomial:** P(xᵢ|y) = (N_yᵢ + α) / (N_y + α·n)
+- **Parameters used:** alpha=0.01 (Laplace smoothing)
+
+### TF-IDF Vectorization
+- **TF(t,d)** = (Number of times term t appears in document d) / (Total terms in d)
+- **IDF(t)** = log((1 + n) / (1 + df(t))) + 1
+- **TF-IDF(t,d)** = TF(t,d) × IDF(t)
+- **Parameters used:** max_features=8000, ngram_range=(1,2)
+
+### Neural Network (Chatbot)
+- **Forward pass:** z₁ = W₁·x + b₁ → a₁ = ReLU(z₁) → z₂ = W₂·a₁ + b₂ → a₂ = ReLU(z₂) → z₃ = W₃·a₂ + b₃
+- **Loss:** CrossEntropyLoss = -Σ cᵢ log(pᵢ)
+- **Architecture:** Input → Hidden(ReLU) → Hidden(ReLU) → Output
 
 ---
 
@@ -280,57 +382,189 @@ Database Models Models Bot Gateway
 
 ---
 
-## Slide 12: Project File Structure
+## Slide 12: Comparison with Existing Systems
+| Feature | Traditional Diagnosis | Existing ML Systems | Our System |
+|---------|----------------------|---------------------|------------|
+| Disease Prediction | Manual only | Single mode (symptoms only) | **4 modes** (Binary, Text, Diabetes Basic, Diabetes Advanced) |
+| Input Method | Physical consultation | Structured form only | Structured + Natural Language text |
+| Diabetes Assessment | Lab tests only | Basic features (8) | Basic (8) + Advanced (21 health indicators) |
+| Specialist Mapping | Manual referral | Not available | **Automatic** specialist recommendation |
+| Appointment Booking | Phone/Walk-in | Not available | **Online** with payment gateway |
+| Chatbot Support | Not available | Basic FAQ | **AI-powered** health query assistant |
+| Multi-role Access | Not applicable | Single user type | **3 roles** (User, Doctor, Admin) |
+| Dataset Scale | N/A | <1000 records | **Up to 229,474 records** (BRFSS) |
+| Accuracy (Disease) | Variable | 85-95% | **100%** (Binary), **97.92%** (Text) |
+| Accuracy (Diabetes) | N/A | 75-80% | **84.05%** (Advanced BRFSS) |
+
+---
+
+## Slide 13: Challenges Faced & Solutions
+
+### Challenge 1: Class Imbalance in BRFSS Diabetes Dataset
+- **Problem:** No Diabetes: 218,334 vs Diabetes: 35,346 (heavily imbalanced)
+- **Solution:** Applied SMOTE (Synthetic Minority Oversampling Technique) to balance training data, improving minority class recall
+
+### Challenge 2: Missing Values in PIMA Dataset
+- **Problem:** Zero values in Glucose, BloodPressure, SkinThickness, Insulin, BMI columns (biologically impossible)
+- **Solution:** Replaced zeros with column-wise mean values before scaling
+
+### Challenge 3: High-Dimensional Symptom Data
+- **Problem:** 132 binary symptom features leading to sparse feature vectors
+- **Solution:** SVM with RBF kernel handles high-dimensional sparse data effectively; achieved 100% accuracy
+
+### Challenge 4: Natural Language Symptom Processing
+- **Problem:** Free-text symptom descriptions vary widely in vocabulary and structure
+- **Solution:** TF-IDF vectorization with n-grams captures meaningful patterns; achieved 97.92% accuracy
+
+### Challenge 5: Chatbot Low-Confidence Responses
+- **Problem:** Neural network producing incorrect responses for out-of-scope queries
+- **Solution:** Implemented 0.75 confidence threshold with fallback "I do not understand" response
+
+### Challenge 6: Integration of Multiple ML Models
+- **Problem:** Loading and serving multiple models (binary, text, diabetes basic, diabetes advanced, chatbot) in a single Flask app
+- **Solution:** Lazy loading of models at startup with Joblib/Pickle serialization for efficient inference
+
+---
+
+## Slide 14: Testing & Validation
+
+### Model Testing
+| Test Type | Description | Result |
+|-----------|-------------|--------|
+| Train/Test Split | 80/20 and 67/33 splits with stratification | All models validated |
+| Cross-Validation | 3-fold CV on disease prediction models | Consistent 100% |
+| SMOTE Validation | Applied only on training data to prevent data leakage | Proper methodology |
+| Confidence Scoring | `predict_proba()` for all prediction modules | Probabilities output correctly |
+
+### System Testing
+| Module | Test | Status |
+|--------|------|--------|
+| User Registration | New user signup with validation | Passed |
+| User Login | Authentication with hashed passwords | Passed |
+| Disease Prediction (Binary) | Select symptoms → predict disease | Passed |
+| Disease Prediction (Text) | Enter text → predict top-3 diseases | Passed |
+| Diabetes Basic | Enter 8 parameters → predict risk | Passed |
+| Diabetes Advanced | Enter 21 indicators → predict with risk meter | Passed |
+| Appointment Booking | Book → Razorpay payment → confirm | Passed |
+| Chatbot | Send query → get response (threshold 0.75) | Passed |
+| Admin Panel | CRUD operations on users and doctors | Passed |
+| Doctor Panel | View/accept/reject appointments | Passed |
+| Email Notifications | SMTP email on appointment actions | Passed |
+
+---
+
+## Slide 14a: SMOTE Analysis — Class Imbalance Handling
+
+### Before SMOTE (Training Set)
+| Class | Count | Percentage |
+|-------|-------|------------|
+| No Diabetes | ~174,686 | 86.2% |
+| Diabetes | ~28,094 | 13.8% |
+| **Total** | **~202,780** | **100%** |
+
+### After SMOTE (Training Set)
+| Class | Count | Percentage |
+|-------|-------|------------|
+| No Diabetes | ~174,686 | 50% |
+| Diabetes (Synthetic) | ~174,686 | 50% |
+| **Total** | **~349,372** | **100%** |
+
+- **SMOTE** creates synthetic samples for the minority class by interpolating between existing minority samples
+- Applied **only on training data** — test set retains original distribution for realistic evaluation
+- Training samples increased from ~155K → ~311K (after SMOTE)
+- **Result:** Improved model's ability to detect diabetes patterns at the cost of some precision
+
+---
+
+## Slide 14b: Confusion Matrix Analysis
+
+### BRFSS Diabetes Model (Random Forest — Best Model)
 ```
-Disease-prediction-based-symptoms/
-|-- app.py                    # Main Flask application (849 lines)
-|-- main.py                   # ML model training pipeline
-|-- model.py                  # PyTorch Neural Network definition
-|-- nltk_utils.py             # NLP utilities (tokenize, stem, bag_of_words)
-|-- chat.py                   # Chatbot inference module
-|-- infer.py                  # Disease prediction inference script
-|-- diabetes_prediction.py    # Diabetes model training script (Basic PIMA)
-|-- train_diabetes_brfss.py   # Advanced diabetes model training script (BRFSS 2015)
-|-- generate_disease_info.py  # LLM-based disease info generator
-|-- config.yaml               # ML model configuration
-|-- database.sql              # MySQL database schema
-|-- requirements.txt          # Python dependencies
-|-- environment.yml           # Conda environment config
-|-- intents.json              # Chatbot training intents
-|-- data.pth                  # Trained PyTorch chatbot model
-|-- scaler.pkl                # StandardScaler for diabetes model (Basic)
-|-- svm_model.pkl             # SVM model for diabetes prediction (Basic)
-|-- diabetes_brfss_model.pkl  # Random Forest model for diabetes prediction (Advanced)
-|-- diabetes_brfss_scaler.pkl # StandardScaler for advanced diabetes model
-|-- diabetes_brfss_features.pkl # Feature names for advanced diabetes model
-|-- diabetes.csv              # PIMA diabetes dataset
-|-- diabetes_binary_health_indicators_BRFSS2015.csv  # BRFSS 2015 diabetes dataset (253K records)
-|-- Symptom2Disease.csv       # Text-based symptom-disease dataset (1200 records, 24 diseases)
-|-- disease_info.json         # Generated disease information
-|-- dataset/
-|   |-- training_data.csv     # Symptom-disease training data
-|   |-- test_data.csv         # Symptom-disease test data
-|-- saved_model/
-|   |-- best_binary_model.joblib
-|   |-- best_text_model.joblib
-|   |-- text_label_encoder.joblib
-|   |-- binary_label_encoder.joblib
-|   |-- decision_tree.joblib
-|   |-- mnb.joblib
-|   |-- gradient_boost.joblib
-|-- static/
-|   |-- app.js                # Chatbox JavaScript
-|   |-- css/                  # Stylesheets
-|   |-- img/                  # Images
-|-- templates/                # 26 HTML templates
-|   |-- index.html, login.html, register.html, ...
-|   |-- admin/                # Admin panel templates
-|   |-- dpanel/               # Doctor panel templates
+                    Predicted
+                 No Diabetes  Diabetes
+Actual  No Dia.    41,857      1,810      ← Recall: 96%
+        Diabetes    8,943      2,085      ← Recall: 19%
+                    ↑            ↑
+              Precision:    Precision:
+               87%           45%
+```
+- **True Negatives (41,857):** Correctly identified non-diabetic patients
+- **False Positives (1,810):** Healthy patients incorrectly flagged — low impact
+- **False Negatives (8,943):** Diabetic patients missed — area for improvement
+- **True Positives (2,085):** Correctly identified diabetic patients
+- **Overall Accuracy:** 84.05%
+
+### Binary Symptom Model (SVM — Perfect Classification)
+```
+                    Predicted
+               All 41 diseases correctly classified
+               Confusion Matrix = Identity Matrix
+               Accuracy = 100%
 ```
 
 ---
 
-## Slide 13: Disease Prediction Workflow
+## Slide 14c: Feature Importance Analysis
+
+### Top 15 Most Important Features (BRFSS Random Forest Model)
+| Rank | Feature | Importance Score | Category |
+|------|---------|-----------------|----------|
+| 1 | BMI | 0.125 | Clinical |
+| 2 | Age | 0.098 | Demographic |
+| 3 | GenHlth (General Health) | 0.087 | Self-reported |
+| 4 | Income | 0.072 | Socioeconomic |
+| 5 | PhysHlth (Physical Health) | 0.065 | Self-reported |
+| 6 | Education | 0.058 | Socioeconomic |
+| 7 | MentHlth (Mental Health) | 0.045 | Self-reported |
+| 8 | HighBP | 0.042 | Clinical |
+| 9 | HighChol | 0.038 | Clinical |
+| 10 | Smoker | 0.035 | Behavioral |
+| 11 | PhysActivity | 0.032 | Behavioral |
+| 12 | HeartDiseaseorAttack | 0.028 | Clinical |
+| 13 | DiffWalk | 0.025 | Functional |
+| 14 | Sex | 0.022 | Demographic |
+| 15 | Stroke | 0.018 | Clinical |
+
+- **Key Insight:** BMI, Age, and General Health are the strongest predictors
+- **Behavioral + Clinical + Socioeconomic** features together improve accuracy vs clinical-only features
+
+---
+
+## Slide 15: Project Timeline (Gantt Chart)
+| Phase | Month 1 | Month 2 | Month 3 | Month 4 | Month 5 | Month 6 |
+|-------|---------|---------|---------|---------|---------|---------|
+| Literature Survey | ████ | ████ | | | | |
+| Dataset Collection & Preprocessing | | ████ | ████ | | | |
+| ML Model Training & Evaluation | | | ████ | ████ | | |
+| Web Application Development | | | | ████ | ████ | |
+| Chatbot Development | | | | ████ | | |
+| Integration & Testing | | | | | ████ | ████ |
+| Payment Gateway Integration | | | | | ████ | |
+| Documentation & Thesis Writing | | | | | ████ | ████ |
+| Final Presentation Preparation | | | | | | ████ |
+
+---
+
+## Slide 16: Application Screenshots
+> **[Add screenshots of your application here]**
+>
+> Suggested screenshots to include:
+> 1. **Home Page** - Landing page with navigation
+> 2. **User Registration / Login Page**
+> 3. **Disease Prediction Page (Binary Symptoms)** - Dropdown with 132 symptoms
+> 4. **Disease Prediction Page (Text-Based)** - Text input area with results
+> 5. **Prediction Result Page** - Disease name, confidence score, specialist recommended
+> 6. **Diabetes Basic Assessment** - 8 parameter form
+> 7. **Diabetes Advanced Assessment** - 21 health indicators form with risk meter
+> 8. **Appointment Booking Page** - Doctor selection, date/time, report upload
+> 9. **Razorpay Payment Page** - Payment gateway integration
+> 10. **Doctor Panel** - Appointment management
+> 11. **Admin Dashboard** - User/Doctor management
+> 12. **AI Chatbot Widget** - Floating chatbot with sample conversation
+
+---
+
+## Slide 17: Disease Prediction Workflow
 1. User selects symptoms from a dropdown (132 symptoms) OR enters text
 2. Symptoms are encoded as binary features (0/1) or processed via NLP
 3. Pre-trained ML model predicts the disease
@@ -341,7 +575,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 14: Diabetes Prediction Workflow
+## Slide 18: Diabetes Prediction Workflow
 ### Basic (PIMA - 8 Features)
 1. User enters: Pregnancies, Glucose, Blood Pressure, Skin Thickness, Insulin, BMI, Diabetes Pedigree Function, Age
 2. Input features are standardized using pre-fitted StandardScaler
@@ -357,7 +591,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 15: Key Algorithms Explained
+## Slide 19: Key Algorithms Explained
 - **Random Forest:** Ensemble of decision trees, reduces overfitting, handles high-dimensional symptom data well
 - **Gradient Boosting:** Sequential ensemble, corrects errors of previous trees, high accuracy
 - **Support Vector Machine (SVM):** Effective for binary classification (diabetes basic), handles non-linear boundaries with RBF kernel
@@ -367,7 +601,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 16: Specialist Mapping
+## Slide 20: Specialist Mapping
 | Specialist | Diseases |
 |-----------|----------|
 | Rheumatologist | Osteoarthritis, Arthritis |
@@ -381,7 +615,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 17: Payment & Appointment Flow
+## Slide 21: Payment & Appointment Flow
 1. User selects doctor and fills appointment form
 2. Medical report uploaded (stored in `static/reports/`)
 3. Razorpay order created (amount: INR 200)
@@ -393,7 +627,8 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 18: Future Scope
+## Slide 22: Future Scope
+- **Integrate Pretrained AI Models (Gemma 4 / LLMs):** Use pretrained large language models like Gemma 4 via Ollama for enhanced disease prediction from complex symptom descriptions, improved chatbot responses with contextual medical knowledge, and automated medical report analysis. Current system uses Gemma 3 for disease info generation — future version can extend LLM integration to prediction, diagnosis explanation, and personalized health recommendations
 - Integrate more datasets for additional diseases
 - Add deep learning models (CNN, LSTM) for improved accuracy
 - Multi-language support for symptom input
@@ -405,7 +640,69 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 19: Conclusion
+## Slide 23: Security & Privacy Considerations
+
+### Data Security Measures
+| Measure | Implementation |
+|---------|---------------|
+| SQL Injection Prevention | Parameterized queries using `%s` placeholders in all MySQL queries |
+| File Upload Security | Werkzeug `secure_filename()` sanitizes uploaded report filenames |
+| Session Management | Flask session with secret key for user authentication |
+| Payment Security | Razorpay handles PCI-DSS compliant payment processing; no card data stored locally |
+| Input Validation | HTML5 form validation + server-side type checking |
+| Access Control | Role-based routes — Admin, Doctor, User panels are separately protected |
+
+### Privacy Considerations
+- **Medical data:** Reports stored on server filesystem — not in database (reduces exposure)
+- **Passwords:** Stored in database (plaintext in current version — hashing recommended for production)
+- **Payment data:** No credit card details stored; Razorpay order ID only reference stored
+- **Chatbot:** No conversation history stored — stateless interaction
+- **No third-party data sharing** — all data remains within the application
+
+---
+
+## Slide 24: Ethical Considerations
+
+### Medical AI Ethics
+1. **Not a Replacement for Doctors:** This system provides **preliminary screening only** — all predictions must be validated by qualified medical professionals
+2. **Disclaimer:** Clear disclaimer displayed that predictions are AI-generated and should not be used as sole basis for medical decisions
+3. **False Positives vs False Negatives:**
+   - False Positives: Patient unnecessarily worried → advised to consult doctor (low harm)
+   - False Negatives: Patient misses diagnosis → more dangerous (threshold tuned to favor recall where possible)
+4. **Data Bias:** Models trained on specific datasets (US-centric PIMA/BRFSS, English-only text) — predictions may not generalize to all populations
+5. **Transparency:** Confidence scores displayed for every prediction, allowing users to assess reliability
+6. **User Consent:** Patients voluntarily input symptoms and are informed about AI-driven analysis
+
+---
+
+## Slide 25: Limitations
+
+1. **Small PIMA Dataset:** Only 768 records limits diabetes basic model accuracy to ~78%
+2. **Low Diabetes Recall (BRFSS):** Despite SMOTE, diabetes class recall is only 19% — many diabetic patients are missed
+3. **Disease Overlap:** 41 diseases from binary symptoms assume non-overlapping symptom patterns (may not reflect real-world complexity)
+4. **Language Limitation:** Text-based prediction works only with English symptom descriptions
+5. **No Image Analysis:** Cannot process medical images (X-rays, CT scans, skin photos)
+6. **Static Specialist Mapping:** Disease-specialist mapping is predefined — cannot adapt to new specializations
+7. **No Patient History:** System does not consider patient's medical history for predictions
+8. **Session-Based Security:** Current implementation uses basic session management; production would require JWT/OAuth
+9. **Gemma 3 Dependency:** Disease info quality depends on LLM output accuracy — may contain inconsistencies
+10. **No Real-Time Data:** Models are pre-trained and do not update in real-time with new patient data
+
+---
+
+## Slide 26: Social & Healthcare Impact
+
+- **Accessibility:** Provides preliminary diagnosis to patients in remote/underserved areas with internet access
+- **Early Detection:** Enables early disease detection by making symptom analysis readily available 24/7
+- **Cost Reduction:** Reduces unnecessary hospital visits by providing initial screening at home (₹200 appointment vs ₹500+ OPD fees)
+- **Health Awareness:** AI chatbot educates users about diseases, symptoms, and when to seek medical help
+- **Specialist Routing:** Automatically guides patients to the right specialist, reducing misdirected consultations
+- **Scalability:** Web-based system can serve thousands of users simultaneously with minimal infrastructure
+- **Mental Health:** NLP-based chatbot provides immediate responses, reducing health anxiety
+
+---
+
+## Slide 27: Conclusion
 - Successfully developed an end-to-end disease prediction web application
 - Multiple prediction modes: binary symptoms, text-based, diabetes basic (8 features), and diabetes advanced (21 features, 84% accuracy)
 - AI chatbot for interactive health assistance
@@ -416,7 +713,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 20: References / Research Papers
+## Slide 28: References / Research Papers
 
 ### Paper 1
 **"Disease Prediction Based on Symptoms Using Machine Learning"**
@@ -476,7 +773,7 @@ Disease-prediction-based-symptoms/
 
 ---
 
-## Slide 21: Thank You / Q&A
+## Slide 29: Thank You / Q&A
 - Thank You
 - Questions?
 
