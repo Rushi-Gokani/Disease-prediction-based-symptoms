@@ -49,6 +49,7 @@
           <li><a class="nav-link scrollto active" href="http://127.0.0.1:5000/#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="http://127.0.0.1:5000/#about">About Us</a></li>
           <li><a class="nav-link scrollto" href="{{ url_for('services')}}">Services</a></li>
+          <li><a class="nav-link scrollto" href="{{ url_for('predict_text')}}">AI Symptom Check</a></li>
           <li><a class="nav-link scrollto" href="http://127.0.0.1:5000/#team">Team</a></li>
           <li><a class="nav-link scrollto" href="http://127.0.0.1:5000/#contact">Contact</a></li>
           {% if session.user %}
@@ -81,10 +82,10 @@
               <h3>V Helthcare</h3>
               <p class="pb-3"><em>Be Your Own Doctor</em></p>
               <p>
-                Ganesh Meridain, Kargil Cross Road<br>
-                Ahmedabad, Gujarat, India<br><br>
-                <strong>Phone:</strong> 7016031546<br>
-                <strong>Email:</strong> vgroup069@gmail.com<br>
+                123 Main Street<br>
+                City, Country<br><br>
+                <strong>Phone:</strong> 0000000000<br>
+                <strong>Email:</strong> contact@example.com<br>
               </p>
               <div class="social-links mt-4">
                 <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -111,7 +112,9 @@
             <h4>Our Services</h4>
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="/checkdisease">Disease Prediction</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="/diabeties">Diabetes Prediction</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/predict_text">AI Symptom Checker</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/diabeties">Diabetes Prediction (Basic)</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/diabetes_advanced">Diabetes Prediction (Advanced)</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="/appoinment">Consult Doctor</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="/history">Medical History</a></li>
             </ul>
@@ -125,14 +128,14 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong><span>G16</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>Team</span></strong>. All Rights Reserved
       </div>
       <div class="credits">
         <!-- All the links in the footer should remain intact. -->
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/ -->
-        Designed by <a href="#hero">G16</a>
+        Designed by <a href="#hero">Team</a>
       </div>
     </div>
   </footer><!-- End Footer -->

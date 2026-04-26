@@ -1,93 +1,149 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
+<style>
+    .db-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .db-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-top: 100px;
+    }
+    .db-card legend {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-align: center;
+        border-bottom: 2px solid #67b0d1;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+    .db-card .form-group label {
+        font-weight: 600;
+        color: #34495e;
+        font-size: 0.9rem;
+    }
+    .db-card .form-control {
+        border-radius: 8px;
+        border: 1px solid #dce1e8;
+        padding: 10px 15px;
+    }
+    .db-card .form-control:focus {
+        border-color: #67b0d1;
+        box-shadow: 0 0 0 0.15rem rgba(103,176,209,0.25);
+    }
+    .db-submit {
+        display: inline-block;
+        background: #67b0d1;
+        padding: 10px 50px;
+        color: #fff;
+        border-radius: 50px;
+        border: 0;
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .db-submit:hover {
+        background: #4a9ab5;
+    }
+    .db-result {
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .db-result.safe {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border: 2px solid #28a745;
+    }
+    .db-result.risk {
+        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        border: 2px solid #dc3545;
+    }
+    .db-result h3 {
+        margin-bottom: 5px;
+        font-weight: 700;
+    }
+    .db-info {
+        background: #f0f6fa;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: #555;
+    }
+    .db-info strong {
+        color: #2c3e50;
+    }
+</style>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diabetes Prediction</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-  font-family: "Open Sans", sans-serif;
-}
+<div class="db-container">
+    <div class="db-card">
+        <legend>Diabetes Prediction (Basic)</legend>
+        <p class="text-center text-muted mb-4">Based on PIMA Dataset — 8 clinical parameters</p>
 
-        #header.header-transparent {
-      background: rgba(55, 142, 181, 0.9);}
-    .about-btn {
-  display: inline-block;
-  background: #67b0d1;
-  padding: 6px 44px 8px 30px;
-  color: #fff;
-  border-radius: 50px;
-  transition: 0.3s;
-  position: relative;
-}
+        {% if prediction is defined and prediction != -1 %}
+        <div class="db-result {% if prediction == 1 %} risk {% else %} safe {% endif %}">
+            {% if prediction == 0 %}
+            <h3 style="color:#28a745;">Low Risk — No Diabetes</h3>
+            <p class="mb-0">It is <strong>unlikely</strong> for the patient to have diabetes.</p>
+            {% else %}
+            <h3 style="color:#dc3545;">High Risk — Diabetes Detected</h3>
+            <p class="mb-0">It is <strong>highly likely</strong> that the patient has or is at risk for diabetes.</p>
+            {% endif %}
+        </div>
+        {% endif %}
 
-    </style>
-</head>
+        <div class="db-info">
+            <strong>Note:</strong> This is a basic screening using 8 parameters from the PIMA dataset (768 records).
+            For a more comprehensive assessment with <strong>21 health indicators and 84% accuracy</strong>,
+            <a href="/diabetes_advanced" style="color:#67b0d1; font-weight:600;">try our Advanced Diabetes Prediction</a>.
+        </div>
 
-<body>
-    <div class="container mt-5">
-        <form action="" method="POST">
-            <fieldset><br><br><br>
-
-                <legend class="text-center">Diabetes Prediction</legend>
-                {% if prediction != -1 %}
-                <div class="alert {% if prediction == 1 %} alert-danger {% else %} alert-success {% endif %}" role="alert">
-                    {% if prediction == 0 %}
-                    It is unlikely for the patient to have diabetes!
-                    {% else %}
-                    It is highly likely that the patient already has or will have diabetes!
-                    {% endif %}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endif %}
-                <div class="form-group" data-aos="fade-up" data-aos-delay="100">
-                    <label for="pregs">Pregnancies</label>
-                    <input type="number" min="0" max="10" class="form-control" name="pregs" required placeholder="No. of Pregnancies">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="200">
-                    <label for="gluc">Glucose Level</label>
-                    <input type="number" class="form-control" name="gluc" required placeholder="Glucose Level (in mg/dL)">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="300">
-                    <label for="bp">Blood Pressure</label>
-                    <input type="number" class="form-control" name="bp" required placeholder="Blood Pressure (in mm Hg)">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="400">
-                    <label for="skin">Skin Thickness</label>
-                    <input type="number" class="form-control" name="skin" required placeholder="Skin Thickness (in mm)">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="500">
-                    <label for="insulin">Insulin</label>
-                    <input type="number" step="0.1" class="form-control" name="insulin" required placeholder="Insulin">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="600">
-                    <label for="bmi">BMI</label>
-                    <input type="number" step="0.1" class="form-control" name="bmi" required placeholder="BMI">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="700">
-                    <label for="func">Diabetes Pedigree Function</label>
-                    <input type="number" step="0.001" class="form-control" name="func" required placeholder="Diabetes Pedigree Function">
-                </div>
-                <div class="form-group" data-aos="fade-up" data-aos-delay="800">
-                    <label for="age">Age</label>
-                    <input type="number" min="21" class="form-control" name="age" required placeholder="Age (in yrs)">
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="900">
-                    <button type="submit" class="about-btn"style="border:0px">Predict</button>
-                    <br><br><br><br>
-                </div>
-            </fieldset>
+        <form method="POST" action="/diabeties">
+            <div class="form-group">
+                <label>Pregnancies</label>
+                <input type="number" min="0" max="17" class="form-control" name="pregs" required placeholder="Number of pregnancies (0 if male)">
+            </div>
+            <div class="form-group">
+                <label>Glucose Level <small class="text-muted">(mg/dL)</small></label>
+                <input type="number" min="0" class="form-control" name="gluc" required placeholder="Fasting glucose level (e.g. 120)">
+            </div>
+            <div class="form-group">
+                <label>Blood Pressure <small class="text-muted">(mm Hg)</small></label>
+                <input type="number" min="0" class="form-control" name="bp" required placeholder="Diastolic BP (e.g. 80)">
+            </div>
+            <div class="form-group">
+                <label>Skin Thickness <small class="text-muted">(mm)</small></label>
+                <input type="number" min="0" class="form-control" name="skin" required placeholder="Triceps skin fold thickness (e.g. 20)">
+            </div>
+            <div class="form-group">
+                <label>Insulin <small class="text-muted">(mu U/ml)</small></label>
+                <input type="number" step="0.1" min="0" class="form-control" name="insulin" required placeholder="2-Hour serum insulin (e.g. 80)">
+            </div>
+            <div class="form-group">
+                <label>BMI <small class="text-muted">(kg/m²)</small></label>
+                <input type="number" step="0.1" min="0" class="form-control" name="bmi" required placeholder="Body mass index (e.g. 25.5)">
+            </div>
+            <div class="form-group">
+                <label>Diabetes Pedigree Function</label>
+                <input type="number" step="0.001" min="0" class="form-control" name="func" required placeholder="Diabetes pedigree function (e.g. 0.5)">
+            </div>
+            <div class="form-group">
+                <label>Age <small class="text-muted">(years)</small></label>
+                <input type="number" min="1" class="form-control" name="age" required placeholder="Age in years (e.g. 35)">
+            </div>
+            <div class="text-center mt-4">
+                <input type="submit" class="db-submit" value="Predict">
+                <br><br><br>
+            </div>
         </form>
     </div>
-</body>
+</div>
 
-</html>
 {% endblock %}

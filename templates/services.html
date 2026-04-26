@@ -39,7 +39,6 @@
 </script>
 </head>
 <body>
-  {% if session.user %}
     <div class="container">
       
         <br>
@@ -58,17 +57,33 @@
             <a href="/checkdisease" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
 
                 </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="150">
+                    <i class="bx bx-comment-dots" style="font-size: 30px;"></i>
+                  <h3>AI Symptom Checker</h3>
+                  <p>Describe your symptoms in plain text and let our AI predict possible conditions.</p>
+                  <a href="/predict_text" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
+                </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
                     <i class="bx bx-receipt"style="font-size: 30px;"></i>
-                  <h3>Diabetes Prediction</h3>
-                  <p>Fastest way to know weather you have diabetes or not.</p>
+                  <h3>Diabetes Prediction (Basic)</h3>
+                  <p>Basic diabetes risk assessment using 8 clinical parameters (PIMA dataset).</p>
                   <a href="/diabeties" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="250">
+                    <i class="bx bx-heart"style="font-size: 30px;"></i>
+                  <h3>Diabetes Prediction (Advanced)</h3>
+                  <p>Comprehensive diabetes risk assessment using 21 health indicators from 253,000+ patient records.</p>
+                  <a href="/diabetes_advanced" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
                 </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
                     <i class="bx bx-shield"style="font-size: 30px;"></i>
                   <h3>Booking Appointment with Doctors</h3>
                   <p>Consult to the best doctors in the town and get diagnosed with them remotely.</p>
+                  {% if session.user %}
                   <a href="/appoinment" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
+                  {% else %}
+                  <a href="/login" class="about-btn">Login to Book<i class="bx bx-chevron-right"></i></a><br><br>
+                  {% endif %}
                 </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
                   
@@ -76,19 +91,14 @@
                       
                   <h3>Medical History</h3>
                   <p>Check the history of the consultation you have done with our best doctors.</p>
+                  {% if session.user %}
                   <a href="{{url_for('history', u_id = session.user.u_id)}}" class="about-btn">Explore<i class="bx bx-chevron-right"></i></a><br><br>
+                  {% else %}
+                  <a href="/login" class="about-btn">Login to View<i class="bx bx-chevron-right"></i></a><br><br>
+                  {% endif %}
                 </div>
               </div>
             </div><!-- End .content-->
-            {% else %}
-            <div class="alert">
-                <i class="fas fa-exclamation-circle"></i>
-                <script>
-                alert("You have not logged in. Please Login");
-                window.location.href = "/login";
-                </script>
-                </div>
-            {% endif %}       
             
         </div>
     </div>

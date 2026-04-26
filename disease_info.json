@@ -1,0 +1,727 @@
+{
+  "Acne": {
+    "description": "Acne is a common skin condition characterized by inflammation and blockage of hair follicles. It typically manifests as pimples, blackheads, and cysts, often accompanied by redness and tenderness. Acne can range from mild to severe and can significantly impact a person's self-esteem.",
+    "common_symptoms": [
+      "pus-filled pimples",
+      "blackheads",
+      "scurrying",
+      "skin sensitivity",
+      "inflammation"
+    ],
+    "precautions": [
+      "avoid picking at skin",
+      "use gentle skincare products",
+      "keep skin clean",
+      "avoid excessive sweating"
+    ],
+    "medications": [
+      "topical retinoids",
+      "antibiotics",
+      "benzoyl peroxide"
+    ],
+    "diet_recommendations": [
+      "reduce dairy intake",
+      "increase omega-3 fatty acids",
+      "maintain a balanced diet"
+    ],
+    "when_to_see_doctor": "Patients should see a doctor immediately if acne is severe, persistent, widespread, or accompanied by significant pain, scarring, or signs of infection (such as fever)."
+  },
+  "Arthritis": {
+    "description": "Arthritis is a common condition characterized by inflammation of the joints, leading to pain, stiffness, and swelling. It can affect people of all ages and there are many different types, each with varying causes and symptoms. Arthritis significantly impacts mobility and overall quality of life.",
+    "common_symptoms": [
+      "Joint stiffness",
+      "Joint pain",
+      "Swollen joints",
+      "Muscle weakness",
+      "Reduced range of motion"
+    ],
+    "precautions": [
+      "Maintain a healthy weight",
+      "Engage in regular low-impact exercise",
+      "Protect joints from injury",
+      "Practice proper posture"
+    ],
+    "medications": [
+      "Pain relievers (NSAIDs)",
+      "Disease-modifying drugs (DMARDs)",
+      "Corticosteroids",
+      "Physical therapy medications"
+    ],
+    "diet_recommendations": [
+      "Anti-inflammatory diet (rich in fish, fruits, and vegetables)",
+      "Maintain a healthy weight",
+      "Ensure adequate intake of Vitamin D and Omega-3 fatty acids"
+    ],
+    "when_to_see_doctor": "Patients should immediately seek medical attention if they experience sudden, severe joint pain, significant swelling, loss of mobility, or if symptoms persist despite home care measures. Urgent care is recommended for any signs of systemic inflammation such as fever."
+  },
+  "Bronchial Asthma": {
+    "description": "Bronchial asthma is a chronic respiratory disease characterized by inflammation and narrowing of the airways in the lungs. This leads to recurring episodes of wheezing, shortness of breath, chest tightness, and coughing. The severity of symptoms can vary greatly, ranging from mild to life-threatening.",
+    "common_symptoms": [
+      "wheezing",
+      "shortness of breath",
+      "chest tightness",
+      "coughing",
+      "difficulty breathing"
+    ],
+    "precautions": [
+      "avoid triggers",
+      "proper inhaler technique",
+      "medication adherence",
+      "environmental control"
+    ],
+    "medications": [
+      "bronchodilators",
+      "inhaled corticosteroids",
+      "long-acting beta-agonists",
+      " leukotriene modifiers"
+    ],
+    "diet_recommendations": [
+      "avoid processed foods",
+      "increase hydration",
+      "consider anti-inflammatory foods"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience severe shortness of breath, persistent wheezing, significant chest tightness, or if your symptoms rapidly worsen despite using your prescribed medications. Also, consult a doctor for any new or worsening asthma symptoms."
+  },
+  "Cervical spondylosis": {
+    "description": "Cervical spondylosis, also known as degenerative disc disease of the neck, is a common age-related condition characterized by the gradual breakdown of cartilage in the vertebrae and discs of the neck. This degeneration can lead to instability, inflammation, and nerve compression, resulting in pain, stiffness, and neurological symptoms. The condition often involves the formation of bone spurs (osteophytes) which can further contribute to these issues.",
+    "common_symptoms": [
+      "neck pain",
+      "back pain",
+      "dizziness",
+      "vertigo",
+      "limb weakness",
+      "muscle stiffness",
+      "persistent cough",
+      "instability",
+      "numbness",
+      "tingling"
+    ],
+    "precautions": [
+      "maintain good posture",
+      "regular stretching exercises",
+      "avoid prolonged neck strain",
+      "use proper lifting techniques"
+    ],
+    "medications": [
+      "analgesics (pain relievers)",
+      "muscle relaxants",
+      "anti-inflammatory drugs",
+      "neuropathic pain medications"
+    ],
+    "diet_recommendations": [
+      "anti-inflammatory diet",
+      "adequate calcium and vitamin D intake",
+      "hydration"
+    ],
+    "when_to_see_doctor": "Patients should immediately seek medical attention if they experience sudden, severe neck pain, difficulty breathing, significant limb weakness, loss of bowel or bladder control, or rapidly worsening symptoms as these could indicate a serious underlying condition requiring urgent diagnosis and treatment."
+  },
+  "Chicken pox": {
+    "description": "Chickenpox, also known as varicella, is a highly contagious viral infection characterized by a distinctive itchy rash. The rash typically starts as small, red bumps that develop into blisters and eventually crust over. It's most common in children but can affect people of all ages.",
+    "common_symptoms": [
+      "Itching",
+      "Red, inflamed rash",
+      "Fatigue",
+      "Fever",
+      "Scratching"
+    ],
+    "precautions": [
+      "Avoid contact with others to prevent spread",
+      "Wash hands frequently",
+      "Keep fingernails short to minimize scratching",
+      "Maintain a clean and cool environment"
+    ],
+    "medications": [
+      "Antiviral medications (e.g., acyclovir)",
+      "Antihistamines (for itching)",
+      "Pain relievers (e.g., acetaminophen, ibuprofen)"
+    ],
+    "diet_recommendations": [
+      "Stay hydrated",
+      "Eat a nutritious diet to support immune function",
+      "Avoid spicy or irritating foods that can worsen itching"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you or your child develops a high fever, severe rash, difficulty breathing, or signs of dehydration. It's also important to consult a doctor if symptoms worsen or do not improve after a few days."
+  },
+  "Common Cold": {
+    "description": "The common cold is a viral infection of the upper respiratory tract, primarily affecting the nose and throat. It's usually caused by rhinoviruses and typically presents with mild symptoms that resolve within 7-10 days. While generally self-limiting, complications can occur, especially in vulnerable populations like young children and the elderly.",
+    "common_symptoms": [
+      "Sneezing",
+      "Runny Nose",
+      "Cough",
+      "Fatigue",
+      "Chills"
+    ],
+    "precautions": [
+      "Frequent Handwashing",
+      "Avoid Close Contact with Infected Individuals",
+      "Cover Coughs and Sneezes",
+      "Maintain Good Hygiene"
+    ],
+    "medications": [
+      "Pain Relievers (Acetaminophen, Ibuprofen)",
+      "Decongestants",
+      "Antihistamines"
+    ],
+    "diet_recommendations": [
+      "Hydration (Increase Fluid Intake)",
+      "Warm Liquids (Soup, Tea)",
+      "Nutrient-Rich Foods"
+    ],
+    "when_to_see_doctor": "Seek medical attention if you experience a high fever (over 103°F or 39.4°C), difficulty breathing, chest pain, severe cough, or symptoms that persist for more than 10 days. Also, consult a doctor if you have underlying health conditions or if symptoms worsen."
+  },
+  "Dengue": {
+    "description": "Dengue fever is a mosquito-borne viral infection prevalent in tropical and subtropical regions. It's characterized by a sudden onset of high fever, severe headache, extreme pain (often myalgia and arthralgia), and rash. The illness can range from mild to severe, with a small percentage developing life-threatening complications like dengue hemorrhagic fever or dengue shock syndrome.",
+    "common_symptoms": [
+      "Fever",
+      "Severe Headache",
+      "Joint Pain (Myalgia)",
+      "Muscle Pain (Arthralgia)",
+      "Skin Rash",
+      "Nausea",
+      "Vomiting",
+      "Chills",
+      "Fatigue",
+      "Loss of Appetite"
+    ],
+    "precautions": [
+      "Use mosquito repellent containing DEET",
+      "Wear long sleeves and pants, especially during peak mosquito hours",
+      "Install screens on windows and doors",
+      "Eliminate standing water around your property where mosquitoes can breed"
+    ],
+    "medications": [
+      "Antipyretics (e.g., Paracetamol)",
+      "NSAIDs (e.g., Ibuprofen) – use with caution due to potential bleeding risk",
+      "Supportive Care (hydration, rest)"
+    ],
+    "diet_recommendations": [
+      "Stay hydrated with plenty of fluids",
+      "Consume easily digestible foods to maintain energy levels",
+      "Eat nutrient-rich foods to aid recovery"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience severe abdominal pain, persistent vomiting, bleeding (e.g., from gums or nose), rapid breathing, significant fluid accumulation, or any signs of shock. Early diagnosis and treatment are crucial for managing dengue fever effectively."
+  },
+  "Dimorphic Hemorrhoids": {
+    "description": "Dimorphic hemorrhoids represent a more severe form of hemorrhoids, characterized by both internal and external hemorrhoidal prolapse and thrombosis. This condition is frequently associated with significant bleeding, pain, and discomfort during bowel movements. The presentation can vary, often involving a combination of symptoms indicative of both prolapsed and thrombosed hemorrhoids.",
+    "common_symptoms": [
+      "Constipation",
+      "Discomfort with bowel motions",
+      "Anal pain",
+      "Bleeding from anus",
+      "Inflamed anus"
+    ],
+    "precautions": [
+      "Maintain a high-fiber diet",
+      "Increase fluid intake",
+      "Avoid straining during bowel movements",
+      "Practice good hygiene"
+    ],
+    "medications": [
+      "Topical corticosteroids",
+      "Pain relievers (NSAIDs)",
+      "Sclerotherapy",
+      "Oral medications for constipation"
+    ],
+    "diet_recommendations": [
+      "Increase fiber intake through fruits, vegetables, and whole grains",
+      "Drink plenty of water to soften stool",
+      "Avoid foods that worsen constipation, such as processed foods and excessive caffeine"
+    ],
+    "when_to_see_doctor": "Patients should immediately seek medical attention if they experience significant rectal bleeding, severe pain, or a sudden worsening of symptoms, as these could indicate complications such as a thrombosed hemorrhoid or other underlying conditions."
+  },
+  "Fungal infection": {
+    "description": "Fungal infections are caused by a variety of fungi that can invade the skin, nails, or mucous membranes. These infections typically manifest as localized skin eruptions, rashes, or discoloration. The severity can range from mild and self-limiting to more serious and requiring medical treatment.",
+    "common_symptoms": [
+      "raised lumps",
+      "red and inflamed rash",
+      "discolored skin",
+      "itching",
+      "nodular eruptions",
+      "darkened spots"
+    ],
+    "precautions": [
+      "maintain good hygiene",
+      "avoid sharing personal items",
+      "keep skin cool and dry",
+      "wear loose-fitting clothing"
+    ],
+    "medications": [
+      "antifungal creams",
+      "oral antifungal medications",
+      "topical corticosteroids (for inflammation)"
+    ],
+    "diet_recommendations": [
+      "consume a diet rich in probiotics",
+      "increase intake of Vitamin D",
+      "avoid excessive sugar consumption"
+    ],
+    "when_to_see_doctor": "Patients should seek immediate medical attention if they experience widespread or severe symptoms, signs of infection spreading, fever, or if the condition does not improve with over-the-counter treatments. A medical professional can accurately diagnose the type of fungal infection and prescribe appropriate treatment."
+  },
+  "Hypertension": {
+    "description": "Hypertension, or high blood pressure, is a condition in which the force of blood against artery walls is consistently too high. This can damage the heart and blood vessels, increasing the risk of serious health problems such as stroke, heart attack, and kidney disease. It is often asymptomatic, but chronic elevation can lead to noticeable symptoms.",
+    "common_symptoms": [
+      "headache",
+      "chest pain",
+      "dizziness",
+      "difficulty maintaining balance",
+      "difficulty concentrating",
+      "instability",
+      "unwell"
+    ],
+    "precautions": [
+      "regular blood pressure monitoring",
+      "maintain a healthy weight",
+      "limit sodium intake",
+      "engage in regular physical activity"
+    ],
+    "medications": [
+      "antihypertensive drugs",
+      "diuretics",
+      "ACE inhibitors",
+      "beta-blockers"
+    ],
+    "diet_recommendations": [
+      "reduce sodium intake",
+      "increase potassium intake",
+      "limit saturated and trans fats",
+      "eat a diet rich in fruits and vegetables"
+    ],
+    "when_to_see_doctor": "Patients experiencing symptoms such as severe headache, chest pain, dizziness, or difficulty maintaining balance should seek immediate medical attention as these could be signs of a hypertensive crisis or other serious cardiovascular issues."
+  },
+  "Impetigo": {
+    "description": "Impetigo is a common, highly contagious bacterial skin infection, most often caused by Staphylococcus or Streptococcus bacteria. It typically presents as small, red sores that quickly develop into blisters filled with clear fluid. These blisters then rupture and form honey-colored crusts, commonly around the nose, mouth, and face.",
+    "common_symptoms": [
+      "red sores",
+      "blistering",
+      "painful lesions",
+      "yellow crusts",
+      "fever"
+    ],
+    "precautions": [
+      "handwashing",
+      "avoid sharing personal items",
+      "keep infected areas clean",
+      "isolate infected individuals"
+    ],
+    "medications": [
+      "topical antibiotics",
+      "oral antibiotics",
+      "antiseptic cleansers"
+    ],
+    "diet_recommendations": [
+      "support immune system with nutrient-rich foods",
+      "stay hydrated",
+      "avoid scratching to prevent secondary infection"
+    ],
+    "when_to_see_doctor": "Patients should see a doctor immediately, especially if they have a high fever, widespread rash, or if the sores are significantly painful, as these may indicate a more serious infection requiring intravenous antibiotics."
+  },
+  "Jaundice": {
+    "description": "Jaundice is a condition characterized by a yellowing of the skin and eyes due to an elevated level of bilirubin in the blood. Bilirubin is a yellow pigment produced during the normal breakdown of red blood cells. Various underlying causes, including liver disease, infection, and blocked bile ducts, can lead to this condition.",
+    "common_symptoms": [
+      "itching",
+      "vomiting",
+      "fatigue",
+      "weight loss",
+      "fever",
+      "abdominal pain",
+      "dark urine",
+      "skin yellowing",
+      "scratchiness"
+    ],
+    "precautions": [
+      "hydration",
+      "avoidance of irritants",
+      "regular medical checkups",
+      "follow doctor's instructions"
+    ],
+    "medications": [
+      "hepatoprotectors",
+      "antihistamines",
+      "antiemetics",
+      "analgesics"
+    ],
+    "diet_recommendations": [
+      "low-fat diet",
+      "avoidance of processed foods",
+      "increased fluid intake"
+    ],
+    "when_to_see_doctor": "Patients experiencing jaundice, especially with symptoms like intense itching, vomiting, weight loss, high fever, dark urine, and abdominal pain, should seek immediate medical attention. These symptoms can indicate a serious underlying condition requiring prompt diagnosis and treatment. Delaying medical evaluation could lead to complications."
+  },
+  "Malaria": {
+    "description": "Malaria is a life-threatening disease caused by parasitic protozoa transmitted to humans through the bites of infected Anopheles mosquitoes. The parasites infect red blood cells, leading to a complex immune response and a range of systemic symptoms. Prompt diagnosis and treatment are crucial to prevent severe complications and death.",
+    "common_symptoms": [
+      "fever",
+      "chills",
+      "headache",
+      "nausea",
+      "vomiting",
+      "muscle aches",
+      "itching",
+      "sweating"
+    ],
+    "precautions": [
+      "avoid mosquito bites",
+      "wear protective clothing",
+      "use insect repellent",
+      "take antimalarial medication as prescribed"
+    ],
+    "medications": [
+      "antimalarial drugs",
+      "artemisinin-based combination therapies (ACTs)",
+      "quinine"
+    ],
+    "diet_recommendations": [
+      "stay hydrated",
+      "consume easily digestible foods",
+      "maintain a balanced diet"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience symptoms of malaria, particularly high fever, chills, headache, or vomiting. Rapid diagnosis and treatment are essential to prevent serious complications such as cerebral malaria or severe anemia."
+  },
+  "Migraine": {
+    "description": "Migraine is a neurological disorder characterized by recurrent headaches, often severe, accompanied by a range of associated symptoms. These headaches are frequently unilateral (one-sided) and can be exacerbated by sensory stimuli like light, sound, or smells. Migraines are thought to be related to changes in brain activity and blood flow, and can significantly impact daily life.",
+    "common_symptoms": [
+      "Headache",
+      "Visual Disturbances (blurred vision, halos, auras)",
+      "Nausea",
+      "Vomiting",
+      "Sensitivity to Light (photophobia)"
+    ],
+    "precautions": [
+      "Identify and Avoid Triggers",
+      "Maintain a Regular Sleep Schedule",
+      "Manage Stress",
+      "Stay Hydrated"
+    ],
+    "medications": [
+      "Triptans",
+      "Ergotamines",
+      "Anti-emetics",
+      "Preventative Medications (Beta-blockers, Antidepressants, CGRP inhibitors)"
+    ],
+    "diet_recommendations": [
+      "Identify and Avoid Trigger Foods (aged cheese, processed meats, chocolate, caffeine)",
+      "Maintain Consistent Meal Times",
+      "Stay Hydrated"
+    ],
+    "when_to_see_doctor": "Patients should seek immediate medical attention if headaches are accompanied by fever, stiff neck, confusion, seizures, numbness, weakness, or if headaches suddenly worsen or change in character.  Also consult a doctor for persistent or severe headaches that interfere with daily activities."
+  },
+  "Pneumonia": {
+    "description": "Pneumonia is an infection that inflames the air sacs in one or both lungs, causing cough with possible fever, chills, and chest pain. It's often caused by bacteria or viruses and can lead to breathing difficulties. Pneumonia can range from mild to severe and may require medical treatment.",
+    "common_symptoms": [
+      "cough",
+      "chest pain",
+      "fever",
+      "chills",
+      "shortness of breath",
+      "fatigue",
+      "fast heart rate",
+      "phlegm production (often with colored sputum)"
+    ],
+    "precautions": [
+      "rest",
+      "stay hydrated",
+      "avoid irritants (smoke, pollutants)",
+      "practice good hygiene (handwashing)"
+    ],
+    "medications": [
+      "antibiotics (for bacterial pneumonia)",
+      "antivirals (for viral pneumonia)",
+      "pain relievers (e.g., ibuprofen, acetaminophen)",
+      "bronchodilators"
+    ],
+    "diet_recommendations": [
+      "consume nutritious foods for immune support",
+      "stay hydrated to thin mucus",
+      "avoid dairy products to reduce mucus production (in some individuals)"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience severe chest pain, difficulty breathing, high fever, or persistent cough, especially if accompanied by confusion or dizziness. Prompt diagnosis and treatment are crucial for preventing complications."
+  },
+  "Psoriasis": {
+    "description": "Psoriasis is a chronic autoimmune disease characterized by rapid skin cell turnover, leading to the formation of thick, silvery scales and inflamed patches. It primarily affects the skin, but can also involve joints, causing inflammation and pain. The exact cause is not fully understood, but genetics and environmental factors play a significant role.",
+    "common_symptoms": [
+      "red, itchy, scaly patches",
+      "peeling skin",
+      "joint pain",
+      "burning sensation",
+      "scalp scaling"
+    ],
+    "precautions": [
+      "avoid excessive scratching",
+      "keep skin moisturized",
+      "protect skin from sun exposure",
+      "maintain good hygiene"
+    ],
+    "medications": [
+      "topical corticosteroids",
+      "vitamin D analogs",
+      "retinoids",
+      "immune modulators"
+    ],
+    "diet_recommendations": [
+      "anti-inflammatory diet",
+      "increase omega-3 fatty acids",
+      "consider limiting processed foods"
+    ],
+    "when_to_see_doctor": "Patients should seek immediate medical attention if they experience severe joint pain, significant skin thickening and scaling, or if their condition is not responding to initial treatment. A dermatologist or rheumatologist should be consulted for proper diagnosis and management."
+  },
+  "Typhoid": {
+    "description": "Typhoid fever is a bacterial infection caused by Salmonella enterica serovar Typhi, typically spread through contaminated food or water. It’s characterized by a prolonged fever, abdominal pain, and various other systemic symptoms. The illness can range from mild to life-threatening, depending on the individual’s immune response and the strain of bacteria involved.",
+    "common_symptoms": [
+      "Fever",
+      "Abdominal Pain",
+      "Constipation",
+      "Diarrhea",
+      "Chills"
+    ],
+    "precautions": [
+      "Practice thorough handwashing",
+      "Drink only purified water",
+      "Consume thoroughly cooked food",
+      "Avoid contact with individuals infected with Typhoid"
+    ],
+    "medications": [
+      "Antibiotics",
+      "Antipyretics (for fever)",
+      "Anti-diarrheal medications"
+    ],
+    "diet_recommendations": [
+      "Maintain adequate hydration",
+      "Consume easily digestible foods",
+      "Avoid fatty and greasy foods"
+    ],
+    "when_to_see_doctor": "Patients experiencing persistent high fever, severe abdominal pain, persistent diarrhea, or signs of dehydration should seek immediate medical attention. Early diagnosis and treatment with antibiotics are crucial for preventing serious complications."
+  },
+  "Varicose Veins": {
+    "description": "Varicose veins are enlarged, twisted veins that most commonly occur in the legs and feet. They develop when the valves within your veins weaken, preventing blood from returning efficiently to the heart. This can lead to blood pooling in the legs and causing symptoms such as pain, swelling, and visible, unsightly veins.",
+    "common_symptoms": [
+      "pain",
+      "swelling",
+      "discomfort",
+      "visible veins",
+      "bruising",
+      "cramping",
+      "fatigue",
+      "rash"
+    ],
+    "precautions": [
+      "wear compression stockings",
+      "maintain a healthy weight",
+      "avoid prolonged standing or sitting",
+      "exercise regularly"
+    ],
+    "medications": [
+      "anticoagulants",
+      "vasodilators",
+      "pain relievers"
+    ],
+    "diet_recommendations": [
+      "increase potassium intake",
+      "consume foods rich in antioxidants",
+      "stay hydrated"
+    ],
+    "when_to_see_doctor": "Patients should seek immediate medical attention if they experience severe pain, sudden swelling, significant bruising, or signs of blood clots (such as leg redness, warmth, or pain) in conjunction with varicose veins. Further evaluation is important to rule out other potential conditions and discuss appropriate treatment options."
+  },
+  "allergy": {
+    "description": "An allergy is an exaggerated immune response to a normally harmless substance, called an allergen. This reaction can manifest in a variety of ways, ranging from mild discomfort to severe, potentially life-threatening symptoms. Allergies are triggered by exposure to substances like pollen, food, insect stings, or medications.",
+    "common_symptoms": [
+      "runny nose",
+      "sneezing",
+      "itchy eyes",
+      "watery eyes",
+      "coughing",
+      "headache",
+      "sore throat",
+      "facial swelling",
+      "difficulty breathing",
+      "shortness of breath"
+    ],
+    "precautions": [
+      "avoid known allergens",
+      "carry epinephrine auto-injector (if prescribed)",
+      "wear a medical alert bracelet",
+      "monitor for worsening symptoms"
+    ],
+    "medications": [
+      "antihistamines",
+      "nasal corticosteroids",
+      "decongestants",
+      "bronchodilators",
+      "epinephrine"
+    ],
+    "diet_recommendations": [
+      "identify and avoid allergenic foods",
+      "consider an elimination diet (under medical supervision)",
+      "maintain a balanced diet to support immune function"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if experiencing difficulty breathing, severe swelling, or any signs of anaphylaxis. Also, consult a doctor for persistent or worsening allergy symptoms, or if you are unsure about the cause of your symptoms."
+  },
+  "diabetes": {
+    "description": "Diabetes mellitus is a chronic metabolic disorder characterized by elevated blood glucose levels. This occurs either because the body doesn't produce enough insulin (Type 1 diabetes) or because the cells don't respond properly to insulin (Type 2 diabetes). Uncontrolled diabetes can lead to serious complications affecting various organs and systems.",
+    "common_symptoms": [
+      "increased thirst",
+      "frequent urination",
+      "dry mouth",
+      "increased hunger",
+      "fatigue",
+      "blurred vision",
+      "dizziness",
+      "increased appetite"
+    ],
+    "precautions": [
+      "regular blood glucose monitoring",
+      "healthy eating habits",
+      "regular physical activity",
+      "medication adherence"
+    ],
+    "medications": [
+      "insulin",
+      "oral hypoglycemic agents",
+      "GLP-1 receptor agonists"
+    ],
+    "diet_recommendations": [
+      "limit sugary drinks and processed foods",
+      "focus on whole foods, including fruits, vegetables, and lean protein",
+      "monitor carbohydrate intake"
+    ],
+    "when_to_see_doctor": "Patients experiencing symptoms of diabetes, especially those with a family history of the condition, should seek immediate medical attention for diagnosis and management. Urgent care is advised if experiencing severe symptoms such as extremely high blood glucose, signs of diabetic ketoacidosis (dizziness, nausea, vomiting), or significant vision changes."
+  },
+  "drug reaction": {
+    "description": "A drug reaction, also known as a drug adverse effect, occurs when the body has an unexpected response to a medication. These reactions can range from mild to severe and are often triggered by an individual’s genetic makeup, existing health conditions, or other medications they are taking. Identifying and managing drug reactions is crucial for patient safety and optimal treatment outcomes.",
+    "common_symptoms": [
+      "Metallic taste",
+      "Change in taste and smell",
+      "Joint pain",
+      "Muscle pain",
+      "Headaches",
+      "Migraines",
+      "Difficulty sleeping",
+      "Muscle twitching",
+      "Tremors",
+      "Dizziness",
+      "Lightheadedness",
+      "Fever",
+      "Confusion",
+      "Cognitive impairment"
+    ],
+    "precautions": [
+      "Inform your doctor about all medications you are taking (including over-the-counter drugs and supplements).",
+      "Read medication labels carefully and follow dosage instructions precisely.",
+      "Report any unusual symptoms or side effects to your doctor immediately.",
+      "Do not stop taking any medication without consulting your healthcare provider."
+    ],
+    "medications": [
+      "Pain relievers",
+      "Antidepressants",
+      "Antihistamines",
+      "Cardiovascular medications",
+      "Antibiotics"
+    ],
+    "diet_recommendations": [
+      "Stay hydrated to help manage potential fever and dizziness.",
+      "Consume a balanced diet to support overall health and immune function.",
+      "Avoid excessive caffeine and alcohol, as these can exacerbate some symptoms."
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience severe symptoms such as difficulty breathing, chest pain, severe confusion, seizures, or signs of anaphylaxis (e.g., swelling of the face, tongue, or throat). Also, consult a doctor promptly for any unexplained or persistent symptoms following medication use."
+  },
+  "gastroesophageal reflux disease": {
+    "description": "Gastroesophageal reflux disease (GERD) is a chronic digestive disorder in which stomach acid frequently flows back into the esophagus. This backflow, or reflux, can irritate the lining of the esophagus, causing a range of symptoms. GERD is often associated with lifestyle factors and can sometimes lead to complications if left untreated.",
+    "common_symptoms": [
+      "heartburn",
+      "acid regurgitation",
+      "chest pain",
+      "difficulty swallowing",
+      "nausea",
+      "excessive belching",
+      "dysphagia",
+      "sour taste in mouth"
+    ],
+    "precautions": [
+      "avoid large meals",
+      "eat slowly",
+      "elevate head of bed",
+      "avoid lying down after eating",
+      "maintain a healthy weight"
+    ],
+    "medications": [
+      "antacids",
+      "H2 blockers",
+      "proton pump inhibitors (PPIs)",
+      "prokinetic agents"
+    ],
+    "diet_recommendations": [
+      "avoid trigger foods (e.g., spicy, fatty, acidic foods)",
+      "eat smaller, more frequent meals",
+      "avoid eating close to bedtime",
+      "drink plenty of water"
+    ],
+    "when_to_see_doctor": "Patients should urgently see a doctor if they experience severe chest pain, difficulty breathing, vomiting blood, or persistent symptoms despite over-the-counter medications.  Also seek immediate medical attention for new or worsening symptoms, particularly those suggestive of complications like esophagitis or Barrett's esophagus."
+  },
+  "peptic ulcer disease": {
+    "description": "Peptic ulcer disease is characterized by sores developing in the lining of the stomach or duodenum (the first part of the small intestine). These ulcers are often caused by infection with the bacterium Helicobacter pylori or the long-term use of nonsteroidal anti-inflammatory drugs (NSAIDs). Symptoms can range from mild discomfort to severe pain and may include nausea, vomiting, and bloating.",
+    "common_symptoms": [
+      "burning abdominal pain",
+      "heartburn",
+      "indigestion",
+      "nausea",
+      "bloating",
+      "loss of appetite",
+      "weight loss",
+      "dark stools",
+      "vomiting with blood",
+      "difficulty swallowing",
+      "persistent sour taste",
+      "excessive belching"
+    ],
+    "precautions": [
+      "avoid NSAIDs",
+      "manage stress",
+      "maintain a healthy weight",
+      "practice good hygiene"
+    ],
+    "medications": [
+      "proton pump inhibitors (PPIs)",
+      "H2 blockers",
+      "antibiotics (for H. pylori infection)",
+      "pain relievers"
+    ],
+    "diet_recommendations": [
+      "avoid spicy, fatty, and acidic foods",
+      "eat smaller, more frequent meals",
+      "avoid lying down immediately after eating",
+      "consider foods that coat the stomach lining, such as bananas and rice"
+    ],
+    "when_to_see_doctor": "Patients should immediately seek medical attention if they experience severe abdominal pain, persistent vomiting with blood or dark stools, difficulty swallowing, or signs of severe dehydration."
+  },
+  "urinary tract infection": {
+    "description": "A urinary tract infection (UTI) is an infection in any part of your urinary system – your kidneys, ureters, bladder, or urethra. UTIs are typically caused by bacteria that enter the urinary tract and multiply. Symptoms can range from mild to severe and often include pain or burning during urination, frequent or urgent urination, and changes in urine appearance.",
+    "common_symptoms": [
+      "Frequent Urgently to Urinate",
+      "Pain During Urination",
+      "Cloudy Urine",
+      "Bloody Urine",
+      "Foul-Smelling Urine",
+      "Pelvic Pain",
+      "Low Fever",
+      "Nausea",
+      "Vomiting",
+      "Dysuria"
+    ],
+    "precautions": [
+      "Drink Plenty of Water",
+      "Urinate Frequently",
+      "Proper Hygiene",
+      "Avoid Irritants"
+    ],
+    "medications": [
+      "Antibiotics",
+      "Pain Relievers (e.g., Ibuprofen)",
+      "Antispasmodics (for bladder spasms)"
+    ],
+    "diet_recommendations": [
+      "Increase Fluid Intake",
+      "Avoid Caffeine and Alcohol",
+      "Limit Irritating Foods (e.g., spicy foods, citrus)"
+    ],
+    "when_to_see_doctor": "Seek immediate medical attention if you experience a high fever (over 101°F or 38.3°C), severe pain in your back or flank, shaking chills, or if you notice blood in your urine. Additionally, consult a doctor if your symptoms worsen or do not improve within 24-48 hours of starting prescribed antibiotics."
+  }
+}

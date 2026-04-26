@@ -10,6 +10,10 @@ import pickle
 
 app = Flask(__name__)
 
+best_binary_model = load("./saved_model/best_binary_model.joblib")
+best_text_model = load("./saved_model/best_text_model.joblib")
+best_text_label_encoder = load("./saved_model/text_label_encoder.joblib")
+
 def predict_disease_from_symptom(symptom_list):
     symptoms = {'itching': 0, 'skin_rash': 0, 'nodal_skin_eruptions': 0, 'continuous_sneezing': 0,
                 'shivering': 0, 'chills': 0, 'joint_pain': 0, 'stomach_pain': 0, 'acidity': 0, 'ulcers_on_tongue': 0,
@@ -46,25 +50,14 @@ def predict_disease_from_symptom(symptom_list):
     df_test = pd.DataFrame(columns=list(symptoms.keys()))
     df_test.loc[0] = np.array(list(symptoms.values()))
     
-    # Load pre-trained model
-    try:
-        clf = load("./saved_model/random_forest.joblib")
-    except Exception as e:
-        print(f"Error loading model: {e}. Attempting to re-train...")
-        import importlib
-        import main
-        importlib.reload(main)  # Force reload to get latest code
-        from main import DiseasePrediction
-        dp = DiseasePrediction(model_name='random_forest')
-        dp.train_model()
-        # Use the trained classifier directly from memory
-        clf = dp.clf
-    result = clf.predict(df_test)
-    
-    # Cleanup
+    result = best_binary_model.predict(df_test)
+    confidence = best_binary_model.predict_proba(df_test)[0]
+    predicted_idx = np.argmax(confidence)
+    confidence_score = confidence[predicted_idx] * 100
+
     del df_test
-    
-    return result[0]
+
+    return result[0], confidence_score
 
 # MySQL Configuration
 app.secret_key = 'your_secret_key_here'
@@ -280,8 +273,7 @@ def predict():
 
     data = request.get_json()
     symptom_list = data['symptoms']
-    prediction = predict_disease_from_symptom(symptom_list)
-    accuracy_percentage = random.uniform(70, 100)
+    prediction, accuracy_percentage = predict_disease_from_symptom(symptom_list)
     return jsonify({'prediction': prediction, 'accuracy': accuracy_percentage})
 
 
@@ -309,6 +301,34 @@ def diabeties():
         # print(prediction)
         
     return render_template('diabeties.html', prediction=prediction)
+
+##############################Advanced Diabetes (BRFSS)###############################
+
+brfss_scaler = pickle.load(open('diabetes_brfss_scaler.pkl', 'rb'))
+brfss_model = pickle.load(open('diabetes_brfss_model.pkl', 'rb'))
+brfss_features = pickle.load(open('diabetes_brfss_features.pkl', 'rb'))
+
+@app.route('/diabetes_advanced', methods=['GET', 'POST'])
+def diabetes_advanced():
+    prediction = -1
+    confidence = None
+    if request.method == 'POST':
+        input_data = []
+        for feat in brfss_features:
+            val = request.form.get(feat, 0)
+            input_data.append(float(val))
+
+        input_features = [input_data]
+        scaled = brfss_scaler.transform(input_features)
+        prediction = int(brfss_model.predict(scaled)[0])
+        try:
+            proba = brfss_model.predict_proba(scaled)[0]
+            confidence = round(max(proba) * 100, 1)
+        except Exception:
+            confidence = None
+
+    return render_template('diabetes_advanced.html', prediction=prediction, confidence=confidence)
+
 ##############################################Doctor###############################
 
 @app.route('/dlogin', methods=['GET', 'POST'])
@@ -563,19 +583,11 @@ def check_disease():
                 df_test.loc[0] = np.array(list(symptoms.values()))
                 
                 # Load pre-trained model
-                try:
-                    clf = load("./saved_model/decision_tree.joblib")
-                except Exception as e:
-                    print(f"Error loading model: {e}. Attempting to re-train...")
-                    import importlib
-                    import main
-                    importlib.reload(main)  # Force reload to get latest code
-                    from main import DiseasePrediction
-                    dp = DiseasePrediction(model_name='decision_tree')
-                    dp.train_model()
-                    # Use the trained classifier directly from memory
-                    clf = dp.clf
+                clf = best_binary_model
                 result = clf.predict(df_test)
+                confidence = clf.predict_proba(df_test)[0]
+                predicted_idx = np.argmax(confidence)
+                confidence_score = confidence[predicted_idx] * 100
                 
                 # Get the predicted disease
                 predicted_disease = result[0]
@@ -782,7 +794,7 @@ def check_disease():
                 # Cleanup
                 del df_test
                 
-                return jsonify({'predicteddisease': predicted_disease, 'consultdoctor': consult_doctor_name, 'consult':consult_doctor, 'predicteddiseasedetails': predicted_disease_details,})
+                return jsonify({'predicteddisease': predicted_disease, 'confidence': f'{confidence_score:.1f}', 'consultdoctor': consult_doctor_name, 'consult':consult_doctor, 'predicteddiseasedetails': predicted_disease_details,})
             except Exception as e:
                 print(f"ERROR: {e}")
                 return jsonify({'error': str(e)}), 500
@@ -792,5 +804,74 @@ def check_disease():
 
 
 
+@app.route('/predict_text', methods=['GET', 'POST'])
+def predict_text():
+    if request.method == 'GET':
+        return render_template('predict_text.html')
+    elif request.method == 'POST':
+        try:
+            data = request.get_json()
+            user_text = data.get('text', '').strip()
+            if not user_text:
+                return jsonify({'error': 'Please describe your symptoms.'}), 400
+
+            pred_encoded = best_text_model.predict([user_text])[0]
+            pred_disease = best_text_label_encoder.inverse_transform([pred_encoded])[0]
+
+            try:
+                probs = best_text_model.predict_proba([user_text])[0]
+                confidence = float(probs[pred_encoded] * 100)
+                top3_idx = np.argsort(probs)[-3:][::-1]
+                top3 = [
+                    {
+                        'disease': best_text_label_encoder.inverse_transform([i])[0],
+                        'confidence': f'{probs[i]*100:.1f}%'
+                    }
+                    for i in top3_idx
+                ]
+            except Exception:
+                confidence = 0.0
+                top3 = [{'disease': pred_disease, 'confidence': 'N/A'}]
+
+            disease_details = {
+                'Psoriasis': {'description': 'Chronic autoimmune condition causing rapid skin cell growth, leading to thick, red, scaly patches on the skin.', 'treatment': 'Topical treatments, phototherapy, oral medications, and lifestyle modifications.'},
+                'Acne': {'description': 'Skin condition characterized by pimples, blackheads, and whiteheads, typically on the face, chest, and back.', 'treatment': 'Topical treatments (benzoyl peroxide, retinoids), oral medications, and skincare routines.'},
+                'Arthritis': {'description': 'Inflammation of the joints causing pain, swelling, and stiffness.', 'treatment': 'Medications, physical therapy, lifestyle changes, and in some cases, surgery.'},
+                'Bronchial Asthma': {'description': 'Chronic respiratory condition characterized by inflammation and narrowing of the airways.', 'treatment': 'Bronchodilators, corticosteroids, avoidance of triggers, and lifestyle modifications.'},
+                'Cervical spondylosis': {'description': 'Degenerative condition affecting the cervical spine caused by age-related changes.', 'treatment': 'Medications for pain and inflammation, physical therapy, and neck exercises.'},
+                'Chicken pox': {'description': 'Highly contagious viral infection characterized by an itchy rash of fluid-filled blisters.', 'treatment': 'Over-the-counter medications for fever and itching, antiviral medications for severe cases.'},
+                'Common Cold': {'description': 'Viral infection of the upper respiratory tract causing runny nose, sore throat, and cough.', 'treatment': 'Rest, hydration, over-the-counter medications for symptom relief.'},
+                'Dengue': {'description': 'Mosquito-borne viral infection causing high fever, severe headache, and joint/muscle pain.', 'treatment': 'Rest, hydration, pain relievers (not aspirin), and medical monitoring.'},
+                'Dimorphic Hemorrhoids': {'description': 'Swollen veins in the rectum or anus causing discomfort, itching, and bleeding.', 'treatment': 'Lifestyle changes, dietary modifications, and medical procedures for severe cases.'},
+                'Fungal infection': {'description': 'Infections caused by fungi affecting skin, nails, or internal organs.', 'treatment': 'Antifungal medications, topical creams, and lifestyle changes.'},
+                'Hypertension': {'description': 'High blood pressure that can lead to serious health complications if untreated.', 'treatment': 'Lifestyle changes and medications to lower blood pressure.'},
+                'Impetigo': {'description': 'Contagious bacterial skin infection with red sores or blisters forming yellowish crusts.', 'treatment': 'Topical or oral antibiotics.'},
+                'Jaundice': {'description': 'Yellowing of skin and eyes due to high bilirubin levels in the blood.', 'treatment': 'Treatment depends on underlying cause - liver disease, infections, or bile duct obstruction.'},
+                'Malaria': {'description': 'Mosquito-borne infectious disease causing fever, chills, sweats, and headache.', 'treatment': 'Antimalarial medications depending on parasite type.'},
+                'Migraine': {'description': 'Neurological disorder with recurrent intense headaches, nausea, and sensitivity to light/sound.', 'treatment': 'Preventive medications, acute treatments, and lifestyle changes.'},
+                'Pneumonia': {'description': 'Lung inflammation caused by bacterial, viral, or fungal infections.', 'treatment': 'Antibiotics, antiviral medications, and supportive care.'},
+                'Typhoid': {'description': 'Bacterial infection causing sustained high fever, weakness, and stomach pain.', 'treatment': 'Antibiotics and supportive care.'},
+                'Varicose Veins': {'description': 'Enlarged, twisted veins usually in the legs causing pain and swelling.', 'treatment': 'Lifestyle modifications, compression stockings, or medical procedures.'},
+                'allergy': {'description': 'Immune system overreaction to harmless substances causing sneezing, rash, and swelling.', 'treatment': 'Allergen avoidance, antihistamines, corticosteroids, and immunotherapy.'},
+                'diabetes': {'description': 'Chronic condition with high blood sugar due to inadequate insulin or insulin resistance.', 'treatment': 'Blood sugar monitoring, lifestyle changes, medications, and insulin therapy.'},
+                'drug reaction': {'description': 'Adverse reaction to a medication ranging from mild rashes to severe allergic reactions.', 'treatment': 'Discontinue offending medication, supportive care, and emergency treatment if severe.'},
+                'gastroesophageal reflux disease': {'description': 'Chronic condition where stomach acid flows back into the esophagus causing heartburn.', 'treatment': 'Lifestyle changes, medications to reduce stomach acid, and surgery in severe cases.'},
+                'peptic ulcer disease': {'description': 'Open sores in the stomach, small intestine, or esophagus lining.', 'treatment': 'Medications to reduce stomach acid, antibiotics for H. pylori, and lifestyle changes.'},
+                'urinary tract infection': {'description': 'Bacterial infection of the urinary tract causing frequent urination and burning sensation.', 'treatment': 'Antibiotics and increased fluid intake.'}
+            }
+
+            details = disease_details.get(pred_disease, {'description': 'No details available', 'treatment': 'Consult a healthcare professional.'})
+
+            return jsonify({
+                'disease': pred_disease,
+                'confidence': f'{confidence:.1f}',
+                'top3': top3,
+                'details': details
+            })
+        except Exception as e:
+            print(f"ERROR: {e}")
+            return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':   
-    app.run(debug=True)  
+    app.run(debug=True)

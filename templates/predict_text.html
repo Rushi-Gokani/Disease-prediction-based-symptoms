@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .predict-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    .predict-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        padding: 40px;
+        margin-top: 100px;
+    }
+
+    .predict-card h1 {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .predict-card .subtitle {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    .textarea-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .textarea-container textarea {
+        width: 100%;
+        padding: 18px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 140px;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .textarea-container textarea:focus {
+        border-color: #409cc5;
+        box-shadow: 0 0 0 3px rgba(64,156,197,0.15);
+    }
+
+    .textarea-container textarea::placeholder {
+        color: #adb5bd;
+    }
+
+    .char-count {
+        text-align: right;
+        color: #adb5bd;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .btn-predict {
+        background: linear-gradient(135deg, #409cc5, #2d7ea3);
+        color: #fff;
+        border: none;
+        padding: 14px 40px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-predict:hover {
+        background: linear-gradient(135deg, #2d7ea3, #1d6b91);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(64,156,197,0.35);
+    }
+
+    .btn-predict:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-clear {
+        background: #f0f0f0;
+        color: #555;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-clear:hover {
+        background: #e0e0e0;
+    }
+
+    .example-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+    }
+
+    .example-section h4 {
+        margin: 0 0 10px 0;
+        color: #555;
+        font-size: 14px;
+    }
+
+    .example-btn {
+        display: inline-block;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 6px 14px;
+        margin: 3px;
+        font-size: 13px;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .example-btn:hover {
+        border-color: #409cc5;
+        color: #409cc5;
+        background: rgba(64,156,197,0.05);
+    }
+
+    .result-card {
+        background: linear-gradient(135deg, #409cc5, #2d7ea3);
+        border-radius: 14px;
+        padding: 28px;
+        color: #fff;
+        margin-top: 24px;
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card .disease-name {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .result-card .confidence-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+
+    .result-card .detail-section {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 16px;
+        margin: 12px 0;
+    }
+
+    .result-card .detail-section h4 {
+        margin: 0 0 6px 0;
+        font-size: 15px;
+        opacity: 0.85;
+    }
+
+    .result-card .detail-section p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .result-card .top3-section {
+        margin-top: 16px;
+    }
+
+    .result-card .top3-section h4 {
+        margin: 0 0 10px 0;
+        font-size: 15px;
+        opacity: 0.85;
+    }
+
+    .top3-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .top3-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 14px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .top3-list li:first-child {
+        background: rgba(255,255,255,0.18);
+        font-weight: 600;
+    }
+
+    .top3-list .disease-label {
+        flex: 1;
+    }
+
+    .top3-list .confidence-bar {
+        width: 100px;
+        height: 8px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 4px;
+        margin: 0 12px;
+        overflow: hidden;
+    }
+
+    .top3-list .confidence-fill {
+        height: 100%;
+        background: #fff;
+        border-radius: 4px;
+    }
+
+    .top3-list .confidence-value {
+        min-width: 45px;
+        text-align: right;
+    }
+
+    .result-card .action-btn {
+        display: inline-block;
+        background: #fff;
+        color: #2d7ea3;
+        padding: 10px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 16px;
+        transition: all 0.2s ease;
+    }
+
+    .result-card .action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .error-card {
+        background: #fee;
+        border: 1px solid #fcc;
+        border-radius: 10px;
+        padding: 16px 20px;
+        color: #c33;
+        margin-top: 16px;
+        display: none;
+    }
+
+    .loading-spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="predict-container">
+    <div class="predict-card">
+        <h1>Describe Your Symptoms</h1>
+        <p class="subtitle">Tell us how you're feeling and our AI will predict possible conditions</p>
+
+        <div class="example-section">
+            <h4>Try an example:</h4>
+            <span class="example-btn" onclick="fillExample('I have been experiencing a skin rash on my arms, legs, and torso. It is red, itchy, and covered in dry, scaly patches.')">Skin rash &amp; itching</span>
+            <span class="example-btn" onclick="fillExample('I have a high fever, severe headache, and pain behind my eyes. I also feel joint and muscle pain.')">High fever &amp; headache</span>
+            <span class="example-btn" onclick="fillExample('I feel very tired all the time and have been gaining weight. My skin feels dry and I am sensitive to cold.')">Fatigue &amp; weight gain</span>
+            <span class="example-btn" onclick="fillExample('I have been having severe headaches and feel dizzy. Sometimes I see flashing lights before the headache starts.')">Headache &amp; dizziness</span>
+            <span class="example-btn" onclick="fillExample('I have difficulty breathing and my chest feels tight. I also have a cough with phlegm.')">Breathing difficulty</span>
+        </div>
+
+        <div class="textarea-container">
+            <textarea id="symptomText" placeholder="Describe your symptoms in detail... e.g., 'I have been experiencing joint pain, fever, and fatigue for the past week. My knees are swollen and it hurts when I move.'"></textarea>
+            <div class="char-count"><span id="charCount">0</span> / 1000</div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn-predict" id="predictBtn" onclick="predictFromText()">Predict Disease</button>
+            <button class="btn-clear" onclick="clearAll()">Clear</button>
+        </div>
+
+        <div class="error-card" id="errorCard"></div>
+
+        <div class="result-card" id="resultCard">
+            <div class="disease-name" id="diseaseName"></div>
+            <div class="confidence-badge" id="confidenceBadge"></div>
+            <div class="detail-section">
+                <h4>Description</h4>
+                <p id="descriptionText"></p>
+            </div>
+            <div class="detail-section">
+                <h4>Treatment</h4>
+                <p id="treatmentText"></p>
+            </div>
+            <div class="top3-section">
+                <h4>Top 3 Predictions</h4>
+                <ul class="top3-list" id="top3List"></ul>
+            </div>
+            <a href="/appoinment" class="action-btn">Book Appointment with Doctor</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const textarea = document.getElementById('symptomText');
+    const charCount = document.getElementById('charCount');
+
+    textarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+        if (this.value.length > 1000) {
+            this.value = this.value.substring(0, 1000);
+            charCount.textContent = 1000;
+        }
+    });
+
+    function fillExample(text) {
+        textarea.value = text;
+        charCount.textContent = text.length;
+    }
+
+    function clearAll() {
+        textarea.value = '';
+        charCount.textContent = '0';
+        document.getElementById('resultCard').style.display = 'none';
+        document.getElementById('errorCard').style.display = 'none';
+    }
+
+    function predictFromText() {
+        const text = textarea.value.trim();
+        if (!text) {
+            const errorCard = document.getElementById('errorCard');
+            errorCard.textContent = 'Please describe your symptoms before predicting.';
+            errorCard.style.display = 'block';
+            return;
+        }
+
+        const btn = document.getElementById('predictBtn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>Analyzing...';
+        document.getElementById('errorCard').style.display = 'none';
+        document.getElementById('resultCard').style.display = 'none';
+
+        fetch('/predict_text', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+
+            if (data.error) {
+                const errorCard = document.getElementById('errorCard');
+                errorCard.textContent = data.error;
+                errorCard.style.display = 'block';
+                return;
+            }
+
+            document.getElementById('diseaseName').textContent = data.disease;
+            document.getElementById('confidenceBadge').textContent = 'Confidence: ' + data.confidence + '%';
+            document.getElementById('descriptionText').textContent = data.details.description;
+            document.getElementById('treatmentText').textContent = data.details.treatment;
+
+            const top3List = document.getElementById('top3List');
+            top3List.innerHTML = '';
+            data.top3.forEach(function(item) {
+                const pct = parseFloat(item.confidence);
+                const li = document.createElement('li');
+                li.innerHTML = '<span class="disease-label">' + item.disease + '</span>' +
+                    '<span class="confidence-bar"><span class="confidence-fill" style="width:' + Math.max(pct, 2) + '%"></span></span>' +
+                    '<span class="confidence-value">' + item.confidence + '</span>';
+                top3List.appendChild(li);
+            });
+
+            document.getElementById('resultCard').style.display = 'block';
+        })
+        .catch(error => {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            const errorCard = document.getElementById('errorCard');
+            errorCard.textContent = 'An error occurred. Please try again.';
+            errorCard.style.display = 'block';
+        });
+    }
+
+    textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            predictFromText();
+        }
+    });
+</script>
+
+{% endblock %}

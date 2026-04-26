@@ -8,28 +8,33 @@
         "How are you",
         "Is anyone there?",
         "Hello",
-        "Good day"
+        "Good day",
+        "Hi there",
+        "Good morning",
+        "Good evening",
+        "What's up",
+        "Sup"
       ],
       "responses": [
-        "Hey :-)",
-        "Hello, thanks for visiting",
-        "Hi there, what can I do for you?",
-        "Hi there, how can I help?"
+        "Hey :-) How can I help you today?",
+        "Hello, thanks for visiting! You can describe your symptoms and I'll help identify possible conditions.",
+        "Hi there! I'm your health assistant. Tell me your symptoms and I'll help you out.",
+        "Hi there, how can I help? You can describe how you're feeling and I'll try to help."
       ]
     },
     {
       "tag": "goodbye",
-      "patterns": ["Bye", "See you later", "Goodbye"],
+      "patterns": ["Bye", "See you later", "Goodbye", "Take care", "Good night", "I'm leaving"],
       "responses": [
-        "See you later, thanks for visiting",
-        "Have a nice day",
-        "Bye! Come back again soon."
+        "See you later, thanks for visiting! Stay healthy!",
+        "Have a nice day! Remember to consult a doctor if symptoms persist.",
+        "Bye! Come back again soon. Take care of your health!"
       ]
     },
     {
       "tag": "thanks",
-      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
-      "responses": ["Happy to help!", "Any time!", "My pleasure"]
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!", "Appreciate it", "Thanks for the info"],
+      "responses": ["Happy to help! Stay healthy!", "Any time! Remember, for serious concerns please consult a doctor.", "My pleasure! Take care of yourself."]
     },
     {
       "tag": "items",
@@ -37,10 +42,13 @@
         "Which service do you provide?",
         "Which service do you provide",
         "Services",
-        "What kind of service do you provide"
+        "What kind of service do you provide",
+        "What can you do",
+        "How can you help me",
+        "What are your features"
       ],
       "responses": [
-        "Our portal provide you to detect disease based no your symptoms we also provide you docter and connect with our doctor"
+        "Our portal provides disease detection based on your symptoms. You can describe your symptoms in natural language, and we'll predict possible conditions. We also connect you with doctors for further consultation."
       ]
     },
     {
@@ -50,10 +58,11 @@
         "Do you accept Mastercard?",
         "Can I pay with Gpay?",
         "Are you cash only?",
-        "Payment"
+        "Payment methods",
+        "How to pay"
       ],
       "responses": [
-        "We accept Credit and Gpay"
+        "We accept Credit and Gpay for doctor consultations."
       ]
     },
     {
@@ -62,10 +71,12 @@
         "How does your website works?",
         "website works",
         "website functionality",
-        "what does your website do"
+        "what does your website do",
+        "how to use this site",
+        "how does disease prediction work"
       ],
       "responses": [
-        "Our Website works on you give 5 symtoms and we will predict your disease and if the sivarity is high then we will provide you with our doctor"
+        "You can describe your symptoms in your own words (like 'I have headache and fever'), and our AI will predict possible diseases. If the condition seems serious, we'll connect you with a specialist doctor."
       ]
     },
     {
@@ -73,11 +84,95 @@
       "patterns": [
         "Tell me a joke!",
         "Tell me something funny!",
-        "Do you know a joke?"
+        "Do you know a joke?",
+        "Make me laugh"
       ],
       "responses": [
         "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
         "What did the buffalo say when his son left for college? Bison."
+      ]
+    },
+    {
+      "tag": "describe_symptoms",
+      "patterns": [
+        "I have a headache and fever",
+        "I feel dizzy and nauseous",
+        "My stomach hurts",
+        "I have been coughing for days",
+        "I have skin rash and itching",
+        "I feel tired all the time",
+        "I have joint pain",
+        "I am experiencing chest pain",
+        "I have a sore throat",
+        "I have back pain",
+        "I feel weak",
+        "I have been vomiting",
+        "I can't sleep properly",
+        "I have body aches",
+        "My eyes are red and watering",
+        "I have difficulty breathing",
+        "I am losing weight suddenly",
+        "I have swollen joints",
+        "I have been sneezing a lot",
+        "I have a runny nose",
+        "I have burning sensation when I urinate",
+        "I have yellowing of skin and eyes",
+        "I have high fever",
+        "I have blisters on my skin",
+        "I have muscle weakness",
+        "I have neck pain and stiffness",
+        "I have pain behind my eyes",
+        "I have dark urine",
+        "I have constipation",
+        "I have diarrhea",
+        "I have pimples and blackheads",
+        "I have peeling skin",
+        "I have silver like dusting on my skin",
+        "I have small dents in my nails",
+        "I have swollen veins in my legs",
+        "I have chills and sweating",
+        "I have indigestion",
+        "I have patches in my throat",
+        "I have continuous sneezing",
+        "I have acidity",
+        "I have ulcers on my tongue",
+        "I have skin peeling and rashes"
+      ],
+      "responses": [
+        "SYMPTOM_DETECTION"
+      ]
+    },
+    {
+      "tag": "ask_disease_info",
+      "patterns": [
+        "Tell me about Psoriasis",
+        "What is Diabetes",
+        "Tell me about Malaria",
+        "What is Dengue",
+        "Tell me about Typhoid",
+        "What is Pneumonia",
+        "Tell me about Acne",
+        "What is Arthritis",
+        "Tell me about Jaundice",
+        "What is Hypertension",
+        "Tell me about Chicken pox",
+        "What is Migraine",
+        "Tell me about Fungal infection",
+        "What is Bronchial Asthma",
+        "Tell me about Common Cold",
+        "What are symptoms of Dengue",
+        "How to treat Malaria",
+        "What causes Diabetes",
+        "Tell me about Allergy",
+        "What is GERD",
+        "Tell me about Tuberculosis",
+        "What is Hepatitis",
+        "Tell me about Impetigo",
+        "What is Varicose Veins",
+        "Tell me about Urinary tract infection"
+      ],
+      "responses": [
+        "DISEASE_INFO"
       ]
     }
   ]
